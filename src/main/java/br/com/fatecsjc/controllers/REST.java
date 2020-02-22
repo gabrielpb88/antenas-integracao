@@ -1,4 +1,4 @@
-package empresario.hello;
+package br.com.fatecsjc.controllers;
 
 import static spark.Spark.get;
 import static spark.Spark.post;
@@ -7,13 +7,15 @@ import java.util.Base64;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import org.json.*;
+import org.bson.Document;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.mongodb.client.FindIterable;
 
-import antena.utils.Jwt;
-import antena.utils.emailService;
-
-import org.bson.Document;
+import br.com.fatecsjc.models.Model;
+import br.com.fatecsjc.utils.Jwt;
+import br.com.fatecsjc.utils.emailService;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -35,7 +37,10 @@ public class REST {
 		WhoIsauth = whoIsauth;
 	}
 	
-	public void Auth() { // Gera um token de autenticação para o usuário
+	/**
+	 *  Gera um token de autenticação para o usuário
+	 */
+	public void Auth() { 
 		post("/Auth", new Route() {
 			@Override
 			public Object handle(final Request request, final Response response) {
@@ -69,7 +74,10 @@ public class REST {
 		});
 	}
 	
-	public void IsAuth() { // Verifica se o usuário está autenticado
+	/**
+	 * Verifica se o usuário está autenticado
+	 */
+	public void IsAuth() { 
 		post("/is-auth", new Route() {
 			@Override
 			public Object handle(final Request request, final Response response) {
@@ -105,7 +113,10 @@ public class REST {
 		});
 	}
 
-	public void cadastroEmpresario() { // Cadastra um novo usuario
+	/**
+	 * Cadastra um novo usuario
+	 */
+	public void cadastroEmpresario() { 
 		post("/cadastroempresario", new Route() {
 			@Override
 			public Object handle(final Request request, final Response response) {
@@ -132,7 +143,10 @@ public class REST {
 		});
 	}
 
-	public void cadastroProjeto() { // Cadastra um novo projeto
+	/**
+	 * Cadastra um novo projeto
+	 */
+	public void cadastroProjeto() { 
 		post("/cadastroprojeto", new Route() {
 			@Override
 			public Object handle(final Request request, final Response response) {
@@ -151,7 +165,10 @@ public class REST {
 		});
 	}
 	
-	public void deletaProjeto() { // Apaga um projeto
+	/**
+	 * Apaga um projeto
+	 */
+	public void deletaProjeto() { 
 		post("/deletaProjeto", new Route() {
 			@Override
 			public Boolean handle(final Request request, final Response response) {
@@ -164,7 +181,10 @@ public class REST {
 		});
 	}
 
-	public void atualizaProjeto() { // Atualiza um projeto
+	/**
+	 * // Atualiza um projeto
+	 */
+	public void atualizaProjeto() { 
 		post("/atualizaProjeto", new Route() {
 			@Override
 			public Object handle(final Request request, final Response response) {
@@ -176,7 +196,10 @@ public class REST {
 		});
 	}
 
-	public void getProjetos() { // Lista os projetos
+	/**
+	 *  Lista os projetos
+	 */
+	public void getProjetos() { 
 		get("/projetos", new Route() {
 			@Override
 			public Object handle(final Request request, final Response response) {
@@ -189,7 +212,10 @@ public class REST {
 		});
 	}
 
-	public void getEmpresarios() { // Lista os empresarios
+	/**
+	 * Lista os empresarios
+	 */
+	public void getEmpresarios() { 
 		get("/empresarios", new Route() {
 			@Override
 			public Object handle(final Request request, final Response response) {
@@ -202,7 +228,10 @@ public class REST {
 		});
 	}
 
-    public void loginEmpresario() { // Faz requisição de login
+	/**
+	 * Faz requisição de login
+	 */
+    public void loginEmpresario() { 
         post("/loginempresario", new Route() {
             @Override
             public Object handle(final Request request, final Response response) {
@@ -222,7 +251,10 @@ public class REST {
         });
     }
 
-    public void ativarUsuario() { // é chamado quando o usuario recebe o link de ativação no email
+    /**
+     * É chamado quando o usuario recebe o link de ativação no email
+     */
+    public void ativarUsuario() { 
 		get("/active/empresario/:email", new Route() {
 			@Override
 			public Object handle(final Request request, final Response response) {
@@ -239,7 +271,10 @@ public class REST {
 		});
 	}
 
-    public void getProjectByEmpresario() { // Lista os projetos do empresario
+    /**
+     * Lista os projetos do empresario
+     */
+    public void getProjectByEmpresario() { 
 		get("/buscaprojetoporempresario", new Route() {
 			@Override
 			public Object handle(final Request request, final Response response) {

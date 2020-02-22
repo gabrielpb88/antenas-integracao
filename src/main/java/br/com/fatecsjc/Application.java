@@ -1,14 +1,21 @@
-package empresario.hello;
+package br.com.fatecsjc;
 
-import static spark.Spark.*;
+
+import static spark.Spark.port;
+import static spark.Spark.staticFileLocation;
+
 import org.bson.Document;
-import cadi.hello.ModelCadi;
-import professor.hello.ControllerProfessor;
-import professor.hello.ModelProfessor;
-import cadi.hello.ControllerCadi;
-import aluno.hello.*;
 
-public class MainServer {
+import br.com.fatecsjc.controllers.ControllerAluno;
+import br.com.fatecsjc.controllers.ControllerCadi;
+import br.com.fatecsjc.controllers.ControllerProfessor;
+import br.com.fatecsjc.controllers.REST;
+import br.com.fatecsjc.models.Model;
+import br.com.fatecsjc.models.ModelAluno;
+import br.com.fatecsjc.models.ModelCadi;
+import br.com.fatecsjc.models.ModelProfessor;
+
+public class Application {
 	final static Model model = new Model();
 	final static ModelCadi modelCadi = new ModelCadi();
 	final static ModelProfessor modelProf = new ModelProfessor();
@@ -28,14 +35,10 @@ public class MainServer {
 
 		staticFileLocation("/static");
 
-		//initializeModelEmpresario();
         initializeControllerEmpresario();
         initializeControllerCadi();
-        //initializeModelCadi();
         initializeControllerProfessor();
-        //initializeModelProfessor();
         initializeControllerAluno();
-        modelAluno.addAluno(Document.parse("{'name':'Leticia', 'email':'leticia.carvalho11@fatec.sp.gov.br','senha':'123', 'ativo':true}"));
     }
     
     public static void initializeControllerEmpresario() {
@@ -112,8 +115,7 @@ public class MainServer {
     	modelProf.addProfessor(Document.parse("{'name':'Nanci', 'email':'Nanci@fatec.sp.gov.br','senha':'1234', 'ativo':true}"));
     	
     }
-    
-    
+        
     public static void initializeControllerAluno() {
     	ControllerAluno controller = new ControllerAluno(modelAluno);
 		controller.cadastroAluno();

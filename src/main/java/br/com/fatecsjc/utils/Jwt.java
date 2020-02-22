@@ -1,4 +1,4 @@
-package antena.utils;
+package br.com.fatecsjc.utils;
 import com.auth0.jwt.*;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;

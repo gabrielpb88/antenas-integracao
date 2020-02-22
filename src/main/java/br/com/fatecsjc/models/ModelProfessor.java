@@ -1,11 +1,10 @@
-package professor.hello;
+package br.com.fatecsjc.models;
 
 import java.util.ArrayList;
 
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
-import com.github.fakemongo.Fongo;
 import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
@@ -15,7 +14,7 @@ import com.mongodb.client.model.FindOneAndUpdateOptions;
 
 public class ModelProfessor {
 
-	MongoClient mongoClient = new MongoClient( "127.0.0.1" );
+	MongoClient mongoClient = new MongoClient( "172.17.0.2" );
 	MongoDatabase db = mongoClient.getDatabase("app");
 	
 	public ArrayList<Document> myProjects(Document email) {

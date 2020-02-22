@@ -1,4 +1,4 @@
-package antena.utils;
+package br.com.fatecsjc.utils;
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.SimpleEmail;
@@ -33,7 +33,7 @@ public class emailService {
             simpleEmail.setSSLOnConnect(SSL_FLAG);
             simpleEmail.setFrom(fromAddress);
             simpleEmail.setSubject(emailSubject);
-            simpleEmail.setContent(emailBody+("http://127.0.0.1:8081/active/"+module+"/"+basemeiaquatro), "text/html");
+            simpleEmail.setContent(emailBody+("http://172.17.0.2:8081/active/"+module+"/"+basemeiaquatro), "text/html");
             simpleEmail.addTo(this.destinatario.getString("email"));
             simpleEmail.send();
         }catch(Exception ex){

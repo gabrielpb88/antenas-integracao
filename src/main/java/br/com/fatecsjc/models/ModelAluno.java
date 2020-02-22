@@ -1,4 +1,4 @@
-package aluno.hello;
+package br.com.fatecsjc.models;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +17,7 @@ import com.mongodb.client.model.FindOneAndUpdateOptions;
 
 public class ModelAluno {
 
-	MongoClient mongoClient = new MongoClient( "127.0.0.1" );
+	MongoClient mongoClient = new MongoClient( "172.17.0.2" );
 	MongoDatabase db = mongoClient.getDatabase("app");
 
 	public String search(String chave) {

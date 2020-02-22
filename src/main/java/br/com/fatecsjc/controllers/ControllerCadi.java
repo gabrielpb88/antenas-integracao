@@ -1,30 +1,26 @@
-package professor.hello;
+package br.com.fatecsjc.controllers;
 
 import static spark.Spark.get;
 import static spark.Spark.post;
 
-import java.util.ArrayList;
 import java.util.Base64;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import org.bson.Document;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.mongodb.client.FindIterable;
-
-import antena.utils.*;
+import br.com.fatecsjc.models.ModelCadi;
+import br.com.fatecsjc.utils.Jwt;
+import br.com.fatecsjc.utils.emailService;
 import spark.Request;
 import spark.Response;
 import spark.Route;
+public class ControllerCadi {
 
-public class ControllerProfessor {
-
-	private ModelProfessor model;
+	private ModelCadi model;
 	private String WhoIsauth;
 
-	public ControllerProfessor(ModelProfessor model) {
+	public ControllerCadi(ModelCadi model) {
 		super();
 		this.model = model;
 	}
@@ -44,14 +40,11 @@ public class ControllerProfessor {
 
 				try {
 					response.header("Access-Control-Allow-Origin", "*");
-
 					// set
 					JSONObject myjson = new JSONObject(request.body());
 					Jwt AuthEngine = new Jwt();
-					
 					// try to find user
 					Document user = model.searchByEmail(myjson.getString("email"));
-
 					String email = user.getString("email");
 					String senhaDigitada = myjson.getString("senha");
 					String senhaArmazenada = user.getString("senha");
@@ -92,35 +85,33 @@ public class ControllerProfessor {
 		}
 	}
 	
-	
 	public void ativarUsuario() { // � chamado quando o usuario recebe o link de ativa��o no email
-		get("/active/professor/:email", new Route() {
+		get("/active/cadi/:email", new Route() {
 			@Override
 			public Object handle(final Request request, final Response response) {
 				String email = new String(Base64.getDecoder().decode ( request.params("email")  )) ;
-				Document found = model.ativarProfessor(email);
+				Document found = model.ativarCadi(email);
 				if (!found.isEmpty()) {
-					response.redirect("http://localhost:8081/professor/index.html");
+					response.redirect("http://localhost:8081/cadi/index.html");
 				}
 				return null;
 			}
 		});
 	}
-
-	public void loginProfessor() {
-		post("/professor", new Route() {
+	
+	public void loginCadi() {
+		post("/cadi", new Route() {
 			@Override
 			public Object handle(Request request, Response response) throws Exception {
 				response.header("Access-Control_Allow-Origin", "*");
-
 				JSONObject json = new JSONObject(request.body());
 				String email = json.getString("email");
 				String senha = json.getString("senha");
 				try {
-					Document professor = model.login(email, senha);
-					
-					if ((Boolean)professor.get("ativo")==true){
-						return professor.toJson();
+					Document cadi = model.login(email, senha);
+
+					if ((Boolean)cadi.get("ativo")==true){
+						return cadi.toJson();
 					}
 					return null;
 				} catch (NullPointerException e) {
@@ -130,31 +121,34 @@ public class ControllerProfessor {
 			}
 		});
 	}
-	public void updateProjetoProfessor() {
-		post("/updateProjetoProfessor", (Request request, Response response) -> {
+	
+	public void atribuirProjeto() {
+		post("/semdono", (Request request, Response response) -> {
 			response.header("Access-Control-Allow-Origin", "*");
-			model.updateProjeto(Document.parse(request.body()));
-			
-			return request.body();
+			JSONObject json = new JSONObject(request.body());
+			model.updateProjeto(Document.parse(request.body() ));
+			return model.buscaSemDono();
 		});
 	}
-	public void inserirProfessor() {
 
-		post("/professorcadastro", new Route() {
+	public void inserirCADI() {
+
+		post("/cadicadastro", new Route() {
 			@Override
 			public Object handle(final Request request, final Response response) {
 				try {
 					response.header("Access-Control-Allow-Origin", "*");
 					String jsonString = request.body();
 					Document userData = Document.parse(jsonString);
-
 					userData.append("ativo", false);
-
 					Document found = model.searchByEmail(userData.getString("email"));
-
 					if (found == null || found.isEmpty()) {
-						model.addProfessor(userData);
-						new emailService(userData).sendSimpleEmail("Antenas - Sua confirmação de conta", "Por favor, para confirmar sua conta, clique no link: ", "professor");
+						model.addCADI(userData);
+						new emailService(userData).sendSimpleEmail(
+								"Antenas - Sua confirma��o de conta",
+								"Por favor, para confirmar sua conta, clique no link: ",
+								"cadi"
+								);
 						return userData.toJson();
 					} else {
 						return "Email j� cadastrado";
@@ -164,36 +158,95 @@ public class ControllerProfessor {
 				}
 			}
 		});
-		
 	}
+	
+	public void atualizaCadi() {
+		post("/updateCadi", (Request request, Response response) -> {
 
-	public void atualizaProfessor() {
-		post("/updateProfessor", (Request request, Response response) -> {
 			response.header("Access-Control-Allow-Origin", "*");
 			JSONObject json = new JSONObject(request.body());
-			model.updateProfessor(Document.parse(request.body()));
-			return json;
+
+			model.updateCadi(Document.parse(request.body()));
+			return model.buscaSemDono();
 		});
 	}
-	public void searchprofessor() {
-		post("/professorLogado", (request, response) -> {
+
+	public void projetos() {
+		get("/projetos", new Route() {
+			@Override
+			public Object handle(final Request request, final Response response) {
+				return model.listaProjetos();
+			}
+		});
+	}
+
+	public void search() {
+		get("/search", (request, response) -> {
+			return model.search(request.queryParams("chave"), request.queryParams("valor"));
+		});
+		
+		get("/searchEmpresario/:email", (request, response) -> {
+			return model.searchEmpresario(request.params("email")).toJson();
+		});
+		
+		post("/usuarioLogado", (request, response) -> {
 			JSONObject json = new JSONObject(request.body());
 			String email = json.getString("email");
 			return model.searchByEmail(email).toJson();
 		});
-		
-		/*restornar meus projetos que fa�o parte*/
-		get("/myprojects", new Route() {
+
+		get("/dono", new Route() {
 			@Override
 			public Object handle(final Request request, final Response response) {
 				String email = request.queryString();
-				ArrayList<Document> projectFound = model.myProjects(new Document("email", email));
-				return StreamSupport.stream(projectFound.spliterator(), false)
-						.map(Document::toJson)
-						.collect(Collectors.joining(", ", "[", "]"));
+				return model.buscaPorDono(email);
 			}
 		});
+		get("/semdono", (request, response) -> {
+			return model.buscaSemDono();
+		});
 		
+		post("/putProf", (request, response) -> {
+			Document projetoComProfessor = Document.parse(request.body());
+			model.updateProjeto(projetoComProfessor);
+			return projetoComProfessor.toJson();
+		});
+		
+		post("/putCadi", (request, response) -> {
+			Document projetoComCadi = Document.parse(request.body());
+			model.updateProjeto(projetoComCadi);
+			return projetoComCadi.toJson();
+		});
+		
+		post("/pulafase", (request, response) -> {
+			Document projeto = Document.parse(request.body());
+			model.updateProjeto(projeto);
+			return projeto.toJson();
+		});
+
 	}
 	
+	public void inserirReuniao() {
+		get("/reuniao", (Request request, Response response) -> {
+			response.header("Access-Control-Allow-Origin", "*");
+			Document reuniao = Document.parse(request.body());
+			model.addReuniao(reuniao);
+			return reuniao.toJson();
+		});
+	}
+	
+	public void listCadi() {
+		post("/listarCadi", (req, res) -> {
+			return model.listCadi();
+		});
+	}
+	
+	public void listProf() {
+		get("/listarProf", new Route() {
+			@Override
+			public Object handle(final Request request, final Response response) {
+				return model.listProf();
+			}
+		});
+	}
 }

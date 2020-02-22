@@ -1,4 +1,4 @@
-package aluno.hello;
+package br.com.fatecsjc.controllers;
 
 import static spark.Spark.get;
 import static spark.Spark.post;
@@ -13,11 +13,12 @@ import org.json.JSONObject;
 
 import com.mongodb.client.FindIterable;
 
+import br.com.fatecsjc.models.ModelAluno;
+import br.com.fatecsjc.utils.Jwt;
+import br.com.fatecsjc.utils.emailService;
 import spark.Request;
 import spark.Response;
-import spark.Route;
-
-import antena.utils.*;;
+import spark.Route;;
 
 public class ControllerAluno {
 

@@ -1,16 +1,15 @@
-package cadi.hello;
+package br.com.fatecsjc.models;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import com.mongodb.MongoClient;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
+import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -19,7 +18,7 @@ import com.mongodb.client.model.FindOneAndUpdateOptions;
 public class ModelCadi {
 
 //	mongoClient mongoClient = new mongoClient("app");
-	MongoClient mongoClient = new MongoClient( "127.0.0.1" );
+	MongoClient mongoClient = new MongoClient( "172.17.0.2" );
 	MongoDatabase db = mongoClient.getDatabase("app");
 
 	public String search(String chave, String valor) {
