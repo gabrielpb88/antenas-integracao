@@ -33,7 +33,7 @@ public class ControllerCadi {
 		WhoIsauth = whoIsauth;
 	}
 	
-	public void Auth() { // Gera um token de autentica��o para o usu�rio
+	public void Auth() { // Gera um token de autenticacaoo para o usuario
 		post("/Auth", new Route() {
 			@Override
 			public Object handle(final Request request, final Response response) {
@@ -64,7 +64,7 @@ public class ControllerCadi {
 		});
 	}
 	
-	public boolean IsAuth(String body) { // Verifica se o usu�rio est� autenticado
+	public boolean IsAuth(String body) { // Verifica se o usuario esta autenticado
 		try {
 			// setting
 			JSONObject myjson = new JSONObject(body);
@@ -85,7 +85,7 @@ public class ControllerCadi {
 		}
 	}
 	
-	public void ativarUsuario() { // � chamado quando o usuario recebe o link de ativa��o no email
+	public void ativarUsuario() { // chamado quando o usuario recebe o link de ativacao no email
 		get("/active/cadi/:email", new Route() {
 			@Override
 			public Object handle(final Request request, final Response response) {
