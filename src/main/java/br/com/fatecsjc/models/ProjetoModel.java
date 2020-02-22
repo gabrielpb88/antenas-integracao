@@ -4,17 +4,17 @@ import org.bson.Document;
 import org.bson.conversions.Bson;
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.FindOneAndUpdateOptions;
 import com.mongodb.client.result.DeleteResult;
 
-public class Model {
+import br.com.fatecsjc.config.Database;
 
-	MongoClient mongoClient = new MongoClient("172.17.0.2");
-	MongoDatabase db = mongoClient.getDatabase("app");
+public class ProjetoModel {
+
+	MongoDatabase db = Database.getConnection();
 
 	public void addProjeto(Document projeto) {
 		MongoCollection<Document> projetos = db.getCollection("projeto");

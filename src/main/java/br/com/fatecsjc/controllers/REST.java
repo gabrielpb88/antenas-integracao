@@ -13,7 +13,7 @@ import org.json.JSONObject;
 
 import com.mongodb.client.FindIterable;
 
-import br.com.fatecsjc.models.Model;
+import br.com.fatecsjc.models.ProjetoModel;
 import br.com.fatecsjc.utils.Jwt;
 import br.com.fatecsjc.utils.emailService;
 import spark.Request;
@@ -22,10 +22,10 @@ import spark.Route;
 
 public class REST {
 
-	private Model model;
+	private ProjetoModel model;
 	private String WhoIsauth;
 
-	public REST(Model store) {
+	public REST(ProjetoModel store) {
 		model = store;
 	}
 

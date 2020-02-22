@@ -10,13 +10,13 @@ import br.com.fatecsjc.controllers.ControllerAluno;
 import br.com.fatecsjc.controllers.ControllerCadi;
 import br.com.fatecsjc.controllers.ControllerProfessor;
 import br.com.fatecsjc.controllers.REST;
-import br.com.fatecsjc.models.Model;
+import br.com.fatecsjc.models.ProjetoModel;
 import br.com.fatecsjc.models.ModelAluno;
 import br.com.fatecsjc.models.ModelCadi;
 import br.com.fatecsjc.models.ModelProfessor;
 
 public class Application {
-	final static Model model = new Model();
+	final static ProjetoModel model = new ProjetoModel();
 	final static ModelCadi modelCadi = new ModelCadi();
 	final static ModelProfessor modelProf = new ModelProfessor();
 	final static ModelAluno modelAluno = new ModelAluno(); 

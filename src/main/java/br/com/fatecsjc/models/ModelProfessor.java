@@ -1,33 +1,32 @@
 package br.com.fatecsjc.models;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.FindOneAndUpdateOptions;
 
+import br.com.fatecsjc.config.Database;
+
 public class ModelProfessor {
 
-	MongoClient mongoClient = new MongoClient( "172.17.0.2" );
-	MongoDatabase db = mongoClient.getDatabase("app");
+	MongoDatabase db = Database.getConnection();
 	
 	public ArrayList<Document> myProjects(Document email) {
 		MongoCollection<Document> projetos = db.getCollection("projeto");
 		
-		Document query = new Document();
 		ArrayList<Document> projects = new ArrayList<Document>();
-		
 		
 		FindIterable<Document> found = projetos.find();
 		
 		for (Document d: found) {
-			ArrayList<String> emails = (ArrayList<String>) d.get("responsavel-professor");
+			List<String> emails = (ArrayList<String>) d.get("responsavel-professor");
 			
 			for(String emailFromProject: emails) {
 				String emailFromUser = (String) email.get("email");
@@ -47,7 +46,6 @@ public class ModelProfessor {
 		projeto.insertOne(doc);
 	}
 	
-	//teste
 	public void addProfessor(Document doc) {
 		MongoCollection<Document> professor = db.getCollection("professor");
 		professor.insertOne(doc);
@@ -59,14 +57,11 @@ public class ModelProfessor {
 		return found;
 	}
 	
-
-	
 	public Document ativarProfessor(String email) {
 		Document prof = searchByEmail(email);
 		prof.replace("ativo", true);
 		return updateProfessor(prof);
 	}
-
 	
 	public Document searchByEmail(String email) {
 		MongoCollection<Document> prof = db.getCollection("professor");
@@ -84,7 +79,6 @@ public class ModelProfessor {
 		return projetos.findOneAndUpdate(query, newDocument, (new FindOneAndUpdateOptions()).upsert(true));
 	}
 	
-	
 	public Document updateProfessor(Document projeto) {
 		MongoCollection<Document> projetos = db.getCollection("professor");
 		BasicDBObject query = new BasicDBObject();
@@ -92,7 +86,5 @@ public class ModelProfessor {
 		Bson newDocument = new Document("$set", projeto);
 		return projetos.findOneAndUpdate(query, newDocument, (new FindOneAndUpdateOptions()).upsert(true));
 	}
-	
-	
 
 }
