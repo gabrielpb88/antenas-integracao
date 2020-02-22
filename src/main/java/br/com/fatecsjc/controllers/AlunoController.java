@@ -13,18 +13,18 @@ import org.json.JSONObject;
 
 import com.mongodb.client.FindIterable;
 
-import br.com.fatecsjc.models.ModelAluno;
+import br.com.fatecsjc.models.AlunoModel;
 import br.com.fatecsjc.utils.Jwt;
 import br.com.fatecsjc.utils.emailService;
 import spark.Request;
 import spark.Response;
 import spark.Route;;
 
-public class ControllerAluno {
+public class AlunoController {
 
-	private ModelAluno model;
+	private AlunoModel model;
 
-	public ControllerAluno(ModelAluno model) {
+	public AlunoController(AlunoModel model) {
 		super();
 		this.model = model;
 	}

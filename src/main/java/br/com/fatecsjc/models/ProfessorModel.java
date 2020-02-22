@@ -14,7 +14,7 @@ import com.mongodb.client.model.FindOneAndUpdateOptions;
 
 import br.com.fatecsjc.config.Database;
 
-public class ModelProfessor {
+public class ProfessorModel {
 
 	MongoDatabase db = Database.getConnection();
 	

@@ -12,19 +12,19 @@ import org.bson.Document;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import br.com.fatecsjc.models.ModelProfessor;
+import br.com.fatecsjc.models.ProfessorModel;
 import br.com.fatecsjc.utils.Jwt;
 import br.com.fatecsjc.utils.emailService;
 import spark.Request;
 import spark.Response;
 import spark.Route;
 
-public class ControllerProfessor {
+public class ProfessorController {
 
-	private ModelProfessor model;
+	private ProfessorModel model;
 	private String WhoIsauth;
 
-	public ControllerProfessor(ModelProfessor model) {
+	public ProfessorController(ProfessorModel model) {
 		super();
 		this.model = model;
 	}

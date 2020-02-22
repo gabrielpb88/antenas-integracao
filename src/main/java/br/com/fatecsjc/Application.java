@@ -6,20 +6,20 @@ import static spark.Spark.staticFileLocation;
 
 import org.bson.Document;
 
-import br.com.fatecsjc.controllers.ControllerAluno;
-import br.com.fatecsjc.controllers.ControllerCadi;
-import br.com.fatecsjc.controllers.ControllerProfessor;
-import br.com.fatecsjc.controllers.REST;
+import br.com.fatecsjc.controllers.AlunoController;
+import br.com.fatecsjc.controllers.CaliController;
+import br.com.fatecsjc.controllers.ProfessorController;
+import br.com.fatecsjc.controllers.ProjetoController;
 import br.com.fatecsjc.models.ProjetoModel;
-import br.com.fatecsjc.models.ModelAluno;
-import br.com.fatecsjc.models.ModelCadi;
-import br.com.fatecsjc.models.ModelProfessor;
+import br.com.fatecsjc.models.AlunoModel;
+import br.com.fatecsjc.models.CadiModel;
+import br.com.fatecsjc.models.ProfessorModel;
 
 public class Application {
 	final static ProjetoModel model = new ProjetoModel();
-	final static ModelCadi modelCadi = new ModelCadi();
-	final static ModelProfessor modelProf = new ModelProfessor();
-	final static ModelAluno modelAluno = new ModelAluno(); 
+	final static CadiModel modelCadi = new CadiModel();
+	final static ProfessorModel modelProf = new ProfessorModel();
+	final static AlunoModel modelAluno = new AlunoModel(); 
 	
     public static void main(String[] args) {
 
@@ -42,7 +42,7 @@ public class Application {
     }
     
     public static void initializeControllerEmpresario() {
-    	REST controller = new REST(model); 
+    	ProjetoController controller = new ProjetoController(model); 
 		controller.cadastroEmpresario();
         controller.cadastroProjeto();
         controller.getProjetos();
@@ -67,7 +67,7 @@ public class Application {
 	}
     
     public static void initializeControllerCadi() {
-    	ControllerCadi controller = new ControllerCadi(modelCadi);
+    	CaliController controller = new CaliController(modelCadi);
 		controller.inserirCADI();
 	    controller.search();
 	    controller.loginCadi();
@@ -98,7 +98,7 @@ public class Application {
     }
     
     public static void initializeControllerProfessor() {
-    	ControllerProfessor controller = new ControllerProfessor(modelProf);
+    	ProfessorController controller = new ProfessorController(modelProf);
     	controller.Auth();
 	    controller.ativarUsuario();  
 	    controller.loginProfessor();
@@ -117,7 +117,7 @@ public class Application {
     }
         
     public static void initializeControllerAluno() {
-    	ControllerAluno controller = new ControllerAluno(modelAluno);
+    	AlunoController controller = new AlunoController(modelAluno);
 		controller.cadastroAluno();
 	    controller.search();
 	    controller.projetos();

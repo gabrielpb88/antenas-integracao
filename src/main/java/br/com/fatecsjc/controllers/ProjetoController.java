@@ -20,12 +20,12 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 
-public class REST {
+public class ProjetoController {
 
 	private ProjetoModel model;
 	private String WhoIsauth;
 
-	public REST(ProjetoModel store) {
+	public ProjetoController(ProjetoModel store) {
 		model = store;
 	}
 

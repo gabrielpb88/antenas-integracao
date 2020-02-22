@@ -9,18 +9,18 @@ import org.bson.Document;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import br.com.fatecsjc.models.ModelCadi;
+import br.com.fatecsjc.models.CadiModel;
 import br.com.fatecsjc.utils.Jwt;
 import br.com.fatecsjc.utils.emailService;
 import spark.Request;
 import spark.Response;
 import spark.Route;
-public class ControllerCadi {
+public class CaliController {
 
-	private ModelCadi model;
+	private CadiModel model;
 	private String WhoIsauth;
 
-	public ControllerCadi(ModelCadi model) {
+	public CaliController(CadiModel model) {
 		super();
 		this.model = model;
 	}

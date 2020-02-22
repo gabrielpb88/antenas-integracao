@@ -16,7 +16,7 @@ import com.mongodb.client.model.FindOneAndUpdateOptions;
 
 import br.com.fatecsjc.config.Database;
 
-public class ModelCadi {
+public class CadiModel {
 
 	private MongoDatabase db = Database.getConnection();
 
