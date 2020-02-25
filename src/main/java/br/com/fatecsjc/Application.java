@@ -70,16 +70,16 @@ public class Application {
 	private static void initializeCadiController() {
 		CadiController controller = new CadiController(cadiModel);
 		controller.inserirCADI();
-	    controller.search();
-	    controller.loginCadi();
-	    controller.projetos();
-	    controller.atribuirProjeto();
-	    controller.listCadi();
-	    controller.listProf();
-	    controller.inserirReuniao();
-	    controller.Auth();
-	    controller.ativarUsuario();  
-	    controller.atualizaCadi();
+		controller.search();
+		controller.loginCadi();
+		controller.projetos();
+		controller.atribuirProjeto();
+		controller.listCadi();
+		controller.listProf();
+		controller.inserirReuniao();
+		controller.Auth();
+		controller.ativarUsuario();
+		controller.atualizaCadi();
 	}
 
 	/**
@@ -87,13 +87,13 @@ public class Application {
 	 */
 	private static void initializeEmpresarioController() {
 		EmpresarioController controller = new EmpresarioController(empresarioModel);
-    	controller.cadastroEmpresario();
-        controller.getEmpresarios();
-        controller.loginEmpresario();
-        controller.getProjectByEmpresario();
-        controller.ativarUsuario();
-        controller.Auth();
-        controller.IsAuth();
+		controller.cadastroEmpresario();
+		controller.getEmpresarios();
+		controller.loginEmpresario();
+		controller.getProjectByEmpresario();
+		controller.ativarUsuario();
+		controller.Auth();
+		controller.IsAuth();
 	}
 
 	/**

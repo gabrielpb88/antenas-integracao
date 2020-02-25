@@ -28,7 +28,7 @@ public class ProfessorController {
 		super();
 		this.model = model;
 	}
-	
+
 	public String getWhoIsauth() {
 		return WhoIsauth;
 	}
@@ -36,7 +36,7 @@ public class ProfessorController {
 	public void setWhoIsauth(String whoIsauth) {
 		WhoIsauth = whoIsauth;
 	}
-	
+
 	public void Auth() { // Gera um token de autentica��o para o usu�rio
 		post("/Auth", new Route() {
 			@Override
@@ -48,7 +48,7 @@ public class ProfessorController {
 					// set
 					JSONObject myjson = new JSONObject(request.body());
 					Jwt AuthEngine = new Jwt();
-					
+
 					// try to find user
 					Document user = model.searchByEmail(myjson.getString("email"));
 
@@ -70,7 +70,7 @@ public class ProfessorController {
 			}
 		});
 	}
-	
+
 	public boolean IsAuth(String body) { // Verifica se o usu�rio est� autenticado
 		try {
 			// setting
@@ -80,9 +80,9 @@ public class ProfessorController {
 			// try to find user
 			String emailOrNull = AuthEngine.verifyJwt((myjson.getString("token")));
 
-			if(emailOrNull == null) {
+			if (emailOrNull == null) {
 				return false;
-			}else {
+			} else {
 				setWhoIsauth(emailOrNull);
 				return true;
 			}
@@ -91,13 +91,12 @@ public class ProfessorController {
 			return false;
 		}
 	}
-	
-	
+
 	public void ativarUsuario() { // � chamado quando o usuario recebe o link de ativa��o no email
 		get("/active/professor/:email", new Route() {
 			@Override
 			public Object handle(final Request request, final Response response) {
-				String email = new String(Base64.getDecoder().decode ( request.params("email")  )) ;
+				String email = new String(Base64.getDecoder().decode(request.params("email")));
 				Document found = model.ativarProfessor(email);
 				if (!found.isEmpty()) {
 					response.redirect("http://localhost:8081/professor/index.html");
@@ -118,8 +117,8 @@ public class ProfessorController {
 				String senha = json.getString("senha");
 				try {
 					Document professor = model.login(email, senha);
-					
-					if ((Boolean)professor.get("ativo")==true){
+
+					if ((Boolean) professor.get("ativo") == true) {
 						return professor.toJson();
 					}
 					return null;
@@ -130,14 +129,16 @@ public class ProfessorController {
 			}
 		});
 	}
+
 	public void updateProjetoProfessor() {
 		post("/updateProjetoProfessor", (Request request, Response response) -> {
 			response.header("Access-Control-Allow-Origin", "*");
 			model.updateProjeto(Document.parse(request.body()));
-			
+
 			return request.body();
 		});
 	}
+
 	public void inserirProfessor() {
 
 		post("/professorcadastro", new Route() {
@@ -154,7 +155,8 @@ public class ProfessorController {
 
 					if (found == null || found.isEmpty()) {
 						model.addProfessor(userData);
-						new emailService(userData).sendSimpleEmail("Antenas - Sua confirmação de conta", "Por favor, para confirmar sua conta, clique no link: ", "professor");
+						new emailService(userData).sendSimpleEmail("Antenas - Sua confirmação de conta",
+								"Por favor, para confirmar sua conta, clique no link: ", "professor");
 						return userData.toJson();
 					} else {
 						return "Email j� cadastrado";
@@ -164,7 +166,7 @@ public class ProfessorController {
 				}
 			}
 		});
-		
+
 	}
 
 	public void atualizaProfessor() {
@@ -175,25 +177,25 @@ public class ProfessorController {
 			return json;
 		});
 	}
+
 	public void searchprofessor() {
 		post("/professorLogado", (request, response) -> {
 			JSONObject json = new JSONObject(request.body());
 			String email = json.getString("email");
 			return model.searchByEmail(email).toJson();
 		});
-		
-		/*restornar meus projetos que fa�o parte*/
+
+		/* restornar meus projetos que fa�o parte */
 		get("/myprojects", new Route() {
 			@Override
 			public Object handle(final Request request, final Response response) {
 				String email = request.queryString();
 				ArrayList<Document> projectFound = model.myProjects(new Document("email", email));
-				return StreamSupport.stream(projectFound.spliterator(), false)
-						.map(Document::toJson)
+				return StreamSupport.stream(projectFound.spliterator(), false).map(Document::toJson)
 						.collect(Collectors.joining(", ", "[", "]"));
 			}
 		});
-		
+
 	}
-	
+
 }

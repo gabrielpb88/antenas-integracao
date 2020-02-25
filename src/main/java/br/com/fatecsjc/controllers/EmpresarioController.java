@@ -36,11 +36,11 @@ public class EmpresarioController {
 	public void setWhoIsauth(String whoIsauth) {
 		WhoIsauth = whoIsauth;
 	}
-	
+
 	/**
-	 *  Gera um token de autenticação para o usuário
+	 * Gera um token de autenticação para o usuário
 	 */
-	public void Auth() { 
+	public void Auth() {
 		post("/Auth", new Route() {
 			@Override
 			public Object handle(final Request request, final Response response) {
@@ -51,7 +51,7 @@ public class EmpresarioController {
 					// set
 					JSONObject myjson = new JSONObject(request.body());
 					Jwt AuthEngine = new Jwt();
-					
+
 					// try to find user
 					Document user = empresarioModel.findByEmail(myjson.getString("email"));
 
@@ -73,11 +73,11 @@ public class EmpresarioController {
 			}
 		});
 	}
-	
+
 	/**
 	 * Verifica se o usuário está autenticado
 	 */
-	public void IsAuth() { 
+	public void IsAuth() {
 		post("/is-auth", new Route() {
 			@Override
 			public Object handle(final Request request, final Response response) {
@@ -89,11 +89,10 @@ public class EmpresarioController {
 
 					// try to find user
 					String emailOrNull = AuthEngine.verifyJwt((myjson.getString("token")));
-					if(emailOrNull == null) {
+					if (emailOrNull == null) {
 						response.status(404);
 						return false;
-					}
-					else {
+					} else {
 
 						Document empresario = empresarioModel.findByEmail(emailOrNull);
 
@@ -116,7 +115,7 @@ public class EmpresarioController {
 	/**
 	 * Cadastra um novo usuario
 	 */
-	public void cadastroEmpresario() { 
+	public void cadastroEmpresario() {
 		post("/cadastroempresario", new Route() {
 			@Override
 			public Object handle(final Request request, final Response response) {
@@ -131,7 +130,8 @@ public class EmpresarioController {
 
 					if (found == null || found.isEmpty()) {
 						empresarioModel.save(userData);
-						new emailService(userData).sendSimpleEmail("Antenas - Sua confirmação de conta", "Por favor, para confirmar sua conta, clique no link: ", "empresario");
+						new emailService(userData).sendSimpleEmail("Antenas - Sua confirmação de conta",
+								"Por favor, para confirmar sua conta, clique no link: ", "empresario");
 						return userData.toJson();
 					} else {
 						return "Email já cadastrado";
@@ -146,15 +146,14 @@ public class EmpresarioController {
 	/**
 	 * Lista os empresarios
 	 */
-	public void getEmpresarios() { 
+	public void getEmpresarios() {
 		get("/empresarios", new Route() {
 			@Override
 			public Object handle(final Request request, final Response response) {
-				 FindIterable<Document> empresariosFound = empresarioModel.findAll();
+				FindIterable<Document> empresariosFound = empresarioModel.findAll();
 
-				 return StreamSupport.stream(empresariosFound.spliterator(), false)
-			        .map(Document::toJson)
-			        .collect(Collectors.joining(", ", "[", "]"));
+				return StreamSupport.stream(empresariosFound.spliterator(), false).map(Document::toJson)
+						.collect(Collectors.joining(", ", "[", "]"));
 			}
 		});
 	}
@@ -162,34 +161,33 @@ public class EmpresarioController {
 	/**
 	 * Faz requisição de login
 	 */
-    public void loginEmpresario() { 
-        post("/loginempresario", new Route() {
-            @Override
-            public Object handle(final Request request, final Response response) {
+	public void loginEmpresario() {
+		post("/loginempresario", new Route() {
+			@Override
+			public Object handle(final Request request, final Response response) {
 				String jsonString = request.body();
-				JSONObject jsonobj =  new JSONObject(jsonString);
+				JSONObject jsonobj = new JSONObject(jsonString);
 				Document found = empresarioModel.findByEmail(jsonobj.getString("email"));
 
 				if (found == null) {
 					response.status(404);
 					return null;
-				}
-				else {
+				} else {
 					response.status(200);
 					return found.toJson();
 				}
-            }
-        });
-    }
+			}
+		});
+	}
 
-    /**
-     * É chamado quando o usuario recebe o link de ativação no email
-     */
-    public void ativarUsuario() { 
+	/**
+	 * É chamado quando o usuario recebe o link de ativação no email
+	 */
+	public void ativarUsuario() {
 		get("/active/empresario/:email", new Route() {
 			@Override
 			public Object handle(final Request request, final Response response) {
-				String email = new String(Base64.getDecoder().decode ( request.params("email")  )) ;
+				String email = new String(Base64.getDecoder().decode(request.params("email")));
 				Document found = empresarioModel.findByEmail(email);
 				found.replace("ativo", true);
 				empresarioModel.update(found);
@@ -201,17 +199,16 @@ public class EmpresarioController {
 		});
 	}
 
-    /**
-     * Lista os projetos do empresario
-     */
-    public void getProjectByEmpresario() { 
+	/**
+	 * Lista os projetos do empresario
+	 */
+	public void getProjectByEmpresario() {
 		get("/buscaprojetoporempresario", new Route() {
 			@Override
 			public Object handle(final Request request, final Response response) {
 				String emailEmpresario = request.queryString();
 				FindIterable<Document> projectFound = empresarioModel.getProjects(emailEmpresario);
-				return StreamSupport.stream(projectFound.spliterator(), false)
-						.map(Document::toJson)
+				return StreamSupport.stream(projectFound.spliterator(), false).map(Document::toJson)
 						.collect(Collectors.joining(", ", "[", "]"));
 			}
 		});
