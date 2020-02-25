@@ -13,6 +13,7 @@ import org.json.JSONObject;
 
 import com.mongodb.client.FindIterable;
 
+import br.com.fatecsjc.models.EmpresarioModel;
 import br.com.fatecsjc.models.ProjetoModel;
 import br.com.fatecsjc.utils.Jwt;
 import br.com.fatecsjc.utils.emailService;
@@ -22,11 +23,13 @@ import spark.Route;
 
 public class ProjetoController {
 
-	private ProjetoModel model;
+	private ProjetoModel projetoModel;
+	private EmpresarioModel empresarioModel;
 	private String WhoIsauth;
 
-	public ProjetoController(ProjetoModel store) {
-		model = store;
+	public ProjetoController(ProjetoModel projetoModel, EmpresarioModel empresarioModel) {
+		this.projetoModel = projetoModel;
+		this.empresarioModel = empresarioModel;
 	}
 
 	public String getWhoIsauth() {
@@ -53,7 +56,7 @@ public class ProjetoController {
 					Jwt AuthEngine = new Jwt();
 					
 					// try to find user
-					Document user = model.searchByEmail(myjson.getString("email"));
+					Document user = empresarioModel.findByEmail(myjson.getString("email"));
 
 					String email = user.getString("email");
 					String senhaDigitada = myjson.getString("senha");
@@ -95,7 +98,7 @@ public class ProjetoController {
 					}
 					else {
 
-						Document empresario = model.searchByEmail(emailOrNull);
+						Document empresario = empresarioModel.findByEmail(emailOrNull);
 
 						if (empresario == null) {
 							response.status(404);
@@ -127,10 +130,10 @@ public class ProjetoController {
 
 					userData.append("ativo", false);
 
-					Document found = model.searchByEmail(userData.getString("email"));
+					Document found = empresarioModel.findByEmail(userData.getString("email"));
 
 					if (found == null || found.isEmpty()) {
-						model.addEmpresario(userData);
+						projetoModel.save(userData);
 						new emailService(userData).sendSimpleEmail("Antenas - Sua confirmação de conta", "Por favor, para confirmar sua conta, clique no link: ", "empresario");
 						return userData.toJson();
 					} else {
@@ -155,7 +158,7 @@ public class ProjetoController {
 					String jsonString = request.body();
 
 					Document project = Document.parse(jsonString);
-					model.addProjeto(project);
+					projetoModel.save(project);
 					
 					return project.toJson();
 				} catch (JSONException ex) {
@@ -174,7 +177,7 @@ public class ProjetoController {
 			public Boolean handle(final Request request, final Response response) {
 				try {
 					response.header("Access-Control-Allow-Origin", "*");
-					return model.deleteProject( Document.parse( request.body() ) ).getDeletedCount() > 0;
+					return projetoModel.delete( Document.parse( request.body() ) ).getDeletedCount() > 0;
 
 				}catch(Exception ex){ throw ex; }
 			}
@@ -190,7 +193,7 @@ public class ProjetoController {
 			public Object handle(final Request request, final Response response) {
 				try {
 					response.header("Access-Control-Allow-Origin", "*");
-					return model.updateProjeto(Document.parse( request.body() )) == null? "projeto n�o encontrado": "projeto deletado";
+					return projetoModel.update(Document.parse( request.body() )) == null? "projeto n�o encontrado": "projeto deletado";
 				}catch(Exception ex) { throw ex; }
 			}
 		});
@@ -203,7 +206,7 @@ public class ProjetoController {
 		get("/projetos", new Route() {
 			@Override
 			public Object handle(final Request request, final Response response) {
-				 FindIterable<Document> projectsFound = model.getAllProjetos();
+				 FindIterable<Document> projectsFound = projetoModel.findAll();
 
 				 return StreamSupport.stream(projectsFound.spliterator(), false)
 			        .map(Document::toJson)
@@ -219,7 +222,7 @@ public class ProjetoController {
 		get("/empresarios", new Route() {
 			@Override
 			public Object handle(final Request request, final Response response) {
-				 FindIterable<Document> empresariosFound = model.getAllEmpresarios();
+				 FindIterable<Document> empresariosFound = empresarioModel.findAll();
 
 				 return StreamSupport.stream(empresariosFound.spliterator(), false)
 			        .map(Document::toJson)
@@ -237,7 +240,7 @@ public class ProjetoController {
             public Object handle(final Request request, final Response response) {
 				String jsonString = request.body();
 				JSONObject jsonobj =  new JSONObject(jsonString);
-				Document found = model.searchByEmail(jsonobj.getString("email"));
+				Document found = empresarioModel.findByEmail(jsonobj.getString("email"));
 
 				if (found == null) {
 					response.status(404);
@@ -259,13 +262,12 @@ public class ProjetoController {
 			@Override
 			public Object handle(final Request request, final Response response) {
 				String email = new String(Base64.getDecoder().decode ( request.params("email")  )) ;
-				Document found = model.searchByEmail(email);
+				Document found = empresarioModel.findByEmail(email);
 				found.replace("ativo", true);
-				model.updateEmpresario(found);
+				empresarioModel.update(found);
 				if (!found.isEmpty()) {
 					response.redirect("http://localhost:8081/");
 				}
-
 				return null;
 			}
 		});
@@ -279,7 +281,7 @@ public class ProjetoController {
 			@Override
 			public Object handle(final Request request, final Response response) {
 				String email = request.queryString();
-				FindIterable<Document> projectFound = model.getProjectByEmpresario(email);
+				FindIterable<Document> projectFound = empresarioModel.getProjectByEmpresario(email);
 				return StreamSupport.stream(projectFound.spliterator(), false)
 						.map(Document::toJson)
 						.collect(Collectors.joining(", ", "[", "]"));
