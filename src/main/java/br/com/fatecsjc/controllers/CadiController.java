@@ -15,12 +15,12 @@ import br.com.fatecsjc.utils.emailService;
 import spark.Request;
 import spark.Response;
 import spark.Route;
-public class CaliController {
+public class CadiController {
 
 	private CadiModel model;
 	private String WhoIsauth;
 
-	public CaliController(CadiModel model) {
+	public CadiController(CadiModel model) {
 		super();
 		this.model = model;
 	}

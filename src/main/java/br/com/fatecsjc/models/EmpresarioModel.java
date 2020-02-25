@@ -44,9 +44,9 @@ public class EmpresarioModel {
 		return found;
 	}
 
-	public FindIterable<Document> getProjectByEmpresario(String email) {
+	public FindIterable<Document> getProjects(String emailEmpresario) {
 		MongoCollection<Document> projetos = db.getCollection("projeto");
-		FindIterable<Document> found = projetos.find(new Document("responsavel-empresario", email));
+		FindIterable<Document> found = projetos.find(new Document("responsavel-empresario", emailEmpresario));
 
 		return found;
 	}
