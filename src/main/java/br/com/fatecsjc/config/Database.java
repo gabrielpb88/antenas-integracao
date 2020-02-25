@@ -1,6 +1,7 @@
 package br.com.fatecsjc.config;
 
-import com.mongodb.MongoClient;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 
 public class Database {
@@ -16,7 +17,7 @@ public class Database {
 	 */
 	public static MongoDatabase getConnection() {
 		if(db == null) {
-			mongoClient = new MongoClient( "172.17.0.2" );
+			mongoClient = MongoClients.create("mongodb://172.17.0.2");
 			db = mongoClient.getDatabase("app");
 		}
 		
