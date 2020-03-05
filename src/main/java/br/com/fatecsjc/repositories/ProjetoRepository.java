@@ -25,6 +25,10 @@ public class ProjetoRepository {
 		return collection.find(Filters.eq("responsavel-professor", email));
 	}
 
+	public FindIterable<Document> findByEmpresario(String email) {
+		return collection.find(Filters.eq("responsavel-empresario", email));
+	}
+
 	public Document update(Document projeto) {
 		return collection.findOneAndUpdate(Filters.eq("_id", projeto.get("_id")), projeto);
 	}
