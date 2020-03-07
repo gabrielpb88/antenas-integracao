@@ -173,15 +173,6 @@ public class CadiController {
 		});
 	}
 
-	public void projetos() {
-		get("/projetos", new Route() {
-			@Override
-			public Object handle(final Request request, final Response response) {
-				return model.listaProjetos();
-			}
-		});
-	}
-
 	public void search() {
 		get("/search", (request, response) -> {
 			return model.search(request.queryParams("chave"), request.queryParams("valor"));

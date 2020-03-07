@@ -17,7 +17,7 @@ import br.com.fatecsjc.models.Professor;
 import br.com.fatecsjc.models.Projeto;
 
 public class Application {
-	private static final Projeto projetoModel = new Projeto();
+	private static final Projeto projetoModel = new Projeto(); // usado apenas para mockar projetos
 	private static final Cadi cadiModel = new Cadi();
 	private static final Professor professorModel = new Professor();
 	private static final Aluno alunoModel = new Aluno();
@@ -51,7 +51,7 @@ public class Application {
 		initializeEmpresarioController();
 		initializeProfessorController();
 		initializeCadiController();
-		initializeProjetoController();
+		ProjetoController.init();
 	}
 
 	/**
@@ -72,7 +72,7 @@ public class Application {
 		controller.inserirCADI();
 		controller.search();
 		controller.loginCadi();
-		controller.projetos();
+//		controller.projetos();
 		controller.atribuirProjeto();
 		controller.listCadi();
 		controller.listProf();
@@ -97,17 +97,6 @@ public class Application {
 	}
 
 	/**
-	 * Inicializa as rotas do Projeto
-	 */
-	private static void initializeProjetoController() {
-		ProjetoController controller = new ProjetoController(projetoModel);
-		controller.cadastroProjeto();
-		controller.getProjetos();
-		controller.deletaProjeto();
-		controller.atualizaProjeto();
-	}
-
-	/**
 	 * Inicializa as rotas do Professor
 	 */
 	private static void initializeProfessorController() {
@@ -128,7 +117,7 @@ public class Application {
 		AlunoController controller = new AlunoController(alunoModel);
 		controller.cadastroAluno();
 		controller.search();
-		controller.projetos();
+//		controller.projetos();
 		controller.atribuirProjeto();
 		controller.entregaProjeto();
 		controller.ativarUsuario();

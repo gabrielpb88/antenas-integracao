@@ -1,101 +1,77 @@
 package br.com.fatecsjc.controllers;
 
-import static spark.Spark.get;
-import static spark.Spark.post;
+import br.com.fatecsjc.services.ProjetoService;
+import org.bson.Document;
+import org.json.JSONException;
 
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import br.com.fatecsjc.models.Projeto;
-import org.bson.Document;
-import org.json.JSONException;
-
-import com.mongodb.client.FindIterable;
-
-import br.com.fatecsjc.models.Projeto;
-import spark.Request;
-import spark.Response;
-import spark.Route;
+import static spark.Spark.*;
 
 public class ProjetoController {
 
-	private Projeto projetoModel;
+    private static ProjetoController controller;
+	private static ProjetoService service;
 
-	public ProjetoController(Projeto projetoModel) {
-		this.projetoModel = projetoModel;
+	private ProjetoController() {
+		service = new ProjetoService();
 	}
 
-	/**
-	 * Cadastra um novo projeto
-	 */
-	public void cadastroProjeto() {
-		post("/cadastroprojeto", new Route() {
-			@Override
-			public Object handle(final Request request, final Response response) {
-				try {
-					response.header("Access-Control-Allow-Origin", "*");
-					String jsonString = request.body();
-
-					Document project = Document.parse(jsonString);
-					projetoModel.save(project);
-
-					return project.toJson();
-				} catch (JSONException ex) {
-					return "erro 500 " + ex;
-				}
-			}
-		});
-	}
+    /**
+     * Método estático encarregado de criar uma instancia do Controller e iniciar todos os Endpoints /projetos
+     */
+	public static void init(){
+	    if(controller == null){
+	        controller = new ProjetoController();
+        }
+        initiateEndpoints();
+    }
 
 	/**
-	 * Apaga um projeto
+	 * Inicia todos os endpoints deste Controller
 	 */
-	public void deletaProjeto() {
-		post("/deletaProjeto", new Route() {
-			@Override
-			public Boolean handle(final Request request, final Response response) {
-				try {
-					response.header("Access-Control-Allow-Origin", "*");
-					return projetoModel.delete(Document.parse(request.body())).getDeletedCount() > 0;
+	private static void initiateEndpoints() {
 
-				} catch (Exception ex) {
-					throw ex;
-				}
-			}
-		});
-	}
-
-	/**
-	 * // Atualiza um projeto
-	 */
-	public void atualizaProjeto() {
-		post("/atualizaProjeto", new Route() {
-			@Override
-			public Object handle(final Request request, final Response response) {
-				try {
-					response.header("Access-Control-Allow-Origin", "*");
-					return projetoModel.update(Document.parse(request.body())) == null ? "projeto n�o encontrado"
-							: "projeto deletado";
-				} catch (Exception ex) {
-					throw ex;
-				}
-			}
-		});
-	}
-
-	/**
-	 * Lista os projetos
-	 */
-	public void getProjetos() {
-		get("/projetos", new Route() {
-			@Override
-			public Object handle(final Request request, final Response response) {
-				FindIterable<Document> projectsFound = projetoModel.findAll();
-
-				return StreamSupport.stream(projectsFound.spliterator(), false).map(Document::toJson)
+		path("/projetos", () -> {
+			get("", (req, res) -> {
+				return StreamSupport.stream(service.findAll().spliterator(), false)
+						.map(Document::toJson)
 						.collect(Collectors.joining(", ", "[", "]"));
-			}
+			});
+
+            post("", (req, res) -> {
+                try {
+                    res.header("Access-Control-Allow-Origin", "*");
+                    String jsonString = req.body();
+
+                    Document project = Document.parse(jsonString);
+                    service.save(project);
+
+                    return project.toJson();
+                } catch (JSONException ex) {
+                    return "erro 500 " + ex;
+                }
+            });
+
+            put("", (req, res) -> {
+                try {
+                    res.header("Access-Control-Allow-Origin", "*");
+                    return service.update(Document.parse(req.body())) == null ? "projeto não encontrado"
+                            : "projeto deletado";
+                } catch (Exception ex) {
+                    throw ex;
+                }
+            });
+
+            delete("", (req, res) -> {
+                try {
+                    res.header("Access-Control-Allow-Origin", "*");
+                    return service.delete(Document.parse(res.body())).getDeletedCount() > 0;
+                } catch (Exception ex) {
+                    throw ex;
+                }
+            });
 		});
 	}
-
 }

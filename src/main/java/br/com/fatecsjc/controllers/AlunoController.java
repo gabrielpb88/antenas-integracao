@@ -169,19 +169,6 @@ public class AlunoController {
 		});
 	}
 
-	public void projetos() {
-		get("/projetos", new Route() {
-			@Override
-			public Object handle(final Request request, final Response response) {
-
-				FindIterable<Document> projectsFound = model.listaProjetos();
-
-				return StreamSupport.stream(projectsFound.spliterator(), false).map(Document::toJson)
-						.collect(Collectors.joining(", ", "[", "]"));
-			}
-		});
-	}
-
 	public void search() {
 		get("/searchaluno/:id", (request, response) -> {
 			return model.search(request.params(":id"));

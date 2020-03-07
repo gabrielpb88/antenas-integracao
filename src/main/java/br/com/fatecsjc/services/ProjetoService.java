@@ -52,10 +52,14 @@ public class ProjetoService {
 		return projetoRepository.findById(id);
 	}
 
-	public Document atribuirCadiResponsavel(Document document) {
-		ObjectId projetoId = document.getObjectId("_id");
-		String emailCadi = document.getString("responsavel-cadi");
-		System.out.println(projetoId + ": " + emailCadi);
+	/**
+	 * Atribui um usuário do Cadi como responsável do projeto
+	 * @param projeto - Objeto contendo o Projeto e o campo 'responsável-cadi' já preenchido
+	 * @return Retorna um Document contendo o Projeto já atualizado
+	 */
+	public Document atribuirCadiResponsavel(Document projeto) {
+		ObjectId projetoId = projeto.getObjectId("_id");
+		String emailCadi = projeto.getString("responsavel-cadi");
 		return projetoRepository.atribuirCadiResponsavel(emailCadi, projetoId);
 	}
 

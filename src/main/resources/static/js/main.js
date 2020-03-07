@@ -25,7 +25,7 @@
         });
   }
 
-  let timeline = new Timeline('/atualizaProjeto');
+  let timeline = new Timeline('/projetos');
 
   let maisInfoModal = $('#modal-mais-info');
 
@@ -211,7 +211,7 @@
 
     $.ajax({
       type: "POST",
-      url: '/cadastroprojeto',
+      url: '/projetos',
       data: JSON.stringify(project),
       success: function() {
         location.reload();
