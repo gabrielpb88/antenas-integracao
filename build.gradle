@@ -12,7 +12,8 @@ applicationName = 'app'
 defaultTasks = ['clean', 'jar']
 
 dependencies {
-	compile 'com.sparkjava:spark-core:2.3'
+
+	compile 'com.sparkjava:spark-core:2.8.0'
 	compile 'org.json:json:20141113'
 	compile 'com.google.code.gson:gson:1.7.2'
 	compile 'com.sparkjava:spark-template-mustache:1.0.0'
