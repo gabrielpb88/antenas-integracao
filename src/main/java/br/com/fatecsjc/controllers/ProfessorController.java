@@ -8,11 +8,13 @@ import java.util.Base64;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import br.com.fatecsjc.models.Professor;
+import com.mongodb.client.FindIterable;
 import org.bson.Document;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import br.com.fatecsjc.models.ProfessorModel;
+import br.com.fatecsjc.models.Professor;
 import br.com.fatecsjc.utils.Jwt;
 import br.com.fatecsjc.utils.emailService;
 import spark.Request;
@@ -21,10 +23,10 @@ import spark.Route;
 
 public class ProfessorController {
 
-	private ProfessorModel model;
+	private Professor model;
 	private String WhoIsauth;
 
-	public ProfessorController(ProfessorModel model) {
+	public ProfessorController(Professor model) {
 		super();
 		this.model = model;
 	}
@@ -190,7 +192,7 @@ public class ProfessorController {
 			@Override
 			public Object handle(final Request request, final Response response) {
 				String email = request.queryString();
-				ArrayList<Document> projectFound = model.myProjects(new Document("email", email));
+				FindIterable<Document> projectFound = model.myProjects(new Document("email", email));
 				return StreamSupport.stream(projectFound.spliterator(), false).map(Document::toJson)
 						.collect(Collectors.joining(", ", "[", "]"));
 			}

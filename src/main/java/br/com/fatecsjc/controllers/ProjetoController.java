@@ -6,21 +6,22 @@ import static spark.Spark.post;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import br.com.fatecsjc.models.Projeto;
 import org.bson.Document;
 import org.json.JSONException;
 
 import com.mongodb.client.FindIterable;
 
-import br.com.fatecsjc.models.ProjetoModel;
+import br.com.fatecsjc.models.Projeto;
 import spark.Request;
 import spark.Response;
 import spark.Route;
 
 public class ProjetoController {
 
-	private ProjetoModel projetoModel;
+	private Projeto projetoModel;
 
-	public ProjetoController(ProjetoModel projetoModel) {
+	public ProjetoController(Projeto projetoModel) {
 		this.projetoModel = projetoModel;
 	}
 

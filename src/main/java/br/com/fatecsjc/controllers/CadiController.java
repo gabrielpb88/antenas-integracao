@@ -1,29 +1,34 @@
 package br.com.fatecsjc.controllers;
 
-import static spark.Spark.get;
-import static spark.Spark.post;
-
-import java.util.Base64;
-
+import br.com.fatecsjc.models.Cadi;
+import br.com.fatecsjc.services.CadiService;
+import br.com.fatecsjc.services.ProjetoService;
+import br.com.fatecsjc.utils.Jwt;
+import br.com.fatecsjc.utils.emailService;
 import org.bson.Document;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import br.com.fatecsjc.models.CadiModel;
-import br.com.fatecsjc.utils.Jwt;
-import br.com.fatecsjc.utils.emailService;
 import spark.Request;
 import spark.Response;
 import spark.Route;
 
+import java.util.Base64;
+
+import static spark.Spark.get;
+import static spark.Spark.post;
+
 public class CadiController {
 
-	private CadiModel model;
+	private Cadi model;
+	private CadiService cadiService;
+	private ProjetoService projetoService;
 	private String WhoIsauth;
 
-	public CadiController(CadiModel model) {
+	public CadiController(Cadi model) {
 		super();
 		this.model = model;
+		this.cadiService = new CadiService();
+		this.projetoService = new ProjetoService();
 	}
 
 	public String getWhoIsauth() {
@@ -124,10 +129,9 @@ public class CadiController {
 	}
 
 	public void atribuirProjeto() {
-		post("/semdono", (Request request, Response response) -> {
+		post("/cadi/semresponsavelcadi", (Request request, Response response) -> {
 			response.header("Access-Control-Allow-Origin", "*");
-			JSONObject json = new JSONObject(request.body());
-			model.updateProjeto(Document.parse(request.body()));
+			projetoService.atribuirCadiResponsavel(Document.parse(request.body()));
 			return model.buscaSemDono();
 		});
 	}
@@ -200,7 +204,7 @@ public class CadiController {
 				return model.buscaPorDono(email);
 			}
 		});
-		get("/semdono", (request, response) -> {
+		get("/projetosemcadi", (request, response) -> {
 			return model.buscaSemDono();
 		});
 

@@ -57,6 +57,11 @@ public class ProjetoRepository {
 		return findById(id);
 	}
 
+	public Document atribuirCadiResponsavel(String email, ObjectId id) {
+		collection.updateOne(Filters.eq("_id", id), Updates.set("responsavel-cadi", email));
+		return findById(id.toString());
+	}
+
 	public Document update(Document projeto) {
 		return collection.findOneAndUpdate(Filters.eq("_id", projeto.get("_id")), projeto);
 	}

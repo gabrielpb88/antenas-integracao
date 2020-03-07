@@ -10,24 +10,24 @@ import br.com.fatecsjc.controllers.CadiController;
 import br.com.fatecsjc.controllers.EmpresarioController;
 import br.com.fatecsjc.controllers.ProfessorController;
 import br.com.fatecsjc.controllers.ProjetoController;
-import br.com.fatecsjc.models.AlunoModel;
-import br.com.fatecsjc.models.CadiModel;
-import br.com.fatecsjc.models.EmpresarioModel;
-import br.com.fatecsjc.models.ProfessorModel;
-import br.com.fatecsjc.models.ProjetoModel;
+import br.com.fatecsjc.models.Aluno;
+import br.com.fatecsjc.models.Cadi;
+import br.com.fatecsjc.models.Empresario;
+import br.com.fatecsjc.models.Professor;
+import br.com.fatecsjc.models.Projeto;
 
 public class Application {
-	private static final ProjetoModel projetoModel = new ProjetoModel();
-	private static final CadiModel cadiModel = new CadiModel();
-	private static final ProfessorModel professorModel = new ProfessorModel();
-	private static final AlunoModel alunoModel = new AlunoModel();
-	private static final EmpresarioModel empresarioModel = new EmpresarioModel();
+	private static final Projeto projetoModel = new Projeto();
+	private static final Cadi cadiModel = new Cadi();
+	private static final Professor professorModel = new Professor();
+	private static final Aluno alunoModel = new Aluno();
+	private static final Empresario empresarioModel = new Empresario();
 
 	public static void main(String[] args) {
 
 		// Get port config of heroku on environment variable
 		ProcessBuilder process = new ProcessBuilder();
-		Integer port;
+		int port;
 		if (process.environment().get("PORT") != null) {
 			port = Integer.parseInt(process.environment().get("PORT"));
 		} else {
@@ -169,7 +169,7 @@ public class Application {
 	/**
 	 * Moka Professores
 	 */
-	public static void mockProfessores() {
+	private static void mockProfessores() {
 		professorModel.addProfessor(
 				Document.parse("{'name':'Giuliano', 'email':'Giuliano@fatec.sp.gov.br','senha':'1234', 'ativo':true}"));
 		professorModel.addProfessor(

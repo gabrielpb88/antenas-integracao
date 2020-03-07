@@ -7,13 +7,14 @@ import java.util.Base64;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import br.com.fatecsjc.models.Empresario;
 import org.bson.Document;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.mongodb.client.FindIterable;
 
-import br.com.fatecsjc.models.EmpresarioModel;
+import br.com.fatecsjc.models.Empresario;
 import br.com.fatecsjc.utils.Jwt;
 import br.com.fatecsjc.utils.emailService;
 import spark.Request;
@@ -22,10 +23,10 @@ import spark.Route;
 
 public class EmpresarioController {
 
-	private EmpresarioModel empresarioModel;
+	private Empresario empresarioModel;
 	private String WhoIsauth;
 
-	public EmpresarioController(EmpresarioModel empresarioModel) {
+	public EmpresarioController(Empresario empresarioModel) {
 		this.empresarioModel = empresarioModel;
 	}
 

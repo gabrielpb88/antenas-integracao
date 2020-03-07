@@ -29,7 +29,7 @@ if(session_login == null){
           insertProjectsOnTable(projects);
       });
 
-      $.get('/semdono')
+      $.get('/projetosemcadi')
           .done(function(projetos){
           projects = JSON.parse(projetos);
           insertSemDono(projects);
@@ -259,7 +259,8 @@ if(session_login == null){
   
                 /* evento que submita a atribuição para o CADI */
                 $submit.click(function(){
-                    $.post("/semdono", JSON.stringify({'_id':project._id, 'responsavel-cadi': sessionStorage.getItem("sess_email_cadi")}), "json");
+                    console.log(sessionStorage.getItem("sess_email_cadi"));
+                    $.post("/cadi/semresponsavelcadi", JSON.stringify({'_id':project._id, 'responsavel-cadi': sessionStorage.getItem("sess_email_cadi")}), "json");
                     location.reload();
                 });
   

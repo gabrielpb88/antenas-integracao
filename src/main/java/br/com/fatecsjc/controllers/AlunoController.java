@@ -1,32 +1,35 @@
 package br.com.fatecsjc.controllers;
 
-import static spark.Spark.get;
-import static spark.Spark.post;
+import br.com.fatecsjc.models.Aluno;
+import br.com.fatecsjc.models.Projeto;
+import br.com.fatecsjc.utils.Jwt;
+import br.com.fatecsjc.utils.emailService;
+import com.mongodb.client.FindIterable;
+import org.bson.Document;
+import org.json.JSONException;
+import org.json.JSONObject;
+import spark.Request;
+import spark.Response;
+import spark.Route;
 
 import java.util.Base64;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import org.bson.Document;
-import org.json.JSONException;
-import org.json.JSONObject;
+import static spark.Spark.get;
+import static spark.Spark.post;
 
-import com.mongodb.client.FindIterable;
-
-import br.com.fatecsjc.models.AlunoModel;
-import br.com.fatecsjc.utils.Jwt;
-import br.com.fatecsjc.utils.emailService;
-import spark.Request;
-import spark.Response;
-import spark.Route;;
+;
 
 public class AlunoController {
 
-	private AlunoModel model;
+	private Aluno model;
+	private Projeto projeto;
 
-	public AlunoController(AlunoModel model) {
+	public AlunoController(Aluno model) {
 		super();
 		this.model = model;
+		this.projeto = new Projeto();
 	}
 
 	// Login com token de autenticacao
@@ -190,11 +193,11 @@ public class AlunoController {
 		});
 
 		get("/semdono", (request, response) -> {
-			return model.buscaSemDono();
+			return model.buscaProjetoSemAlunoResponsavel();
 		});
 
 		get("/putAluno", (request, response) -> {
-			return model.atribuirAluno(request.queryParams("emailProf"), request.queryParams("_id"));
+			return model.atribuirAlunoResponsavelParaUmProjeto(request.queryParams("emailProf"), request.queryParams("_id"));
 		});
 
 		get("/put", (request, response) -> {
@@ -225,7 +228,7 @@ public class AlunoController {
 			String alunos = project.getString("autores");
 			String descricao = project.getString("descricao");
 			String linkGitHub = project.getString("link");
-			Document now = model.getProject(id);
+			Document now = projeto.getProject(id);
 			return model.submitProject(id, now, alunos, descricao, linkGitHub);
 		});
 	}
