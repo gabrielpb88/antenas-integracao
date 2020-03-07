@@ -1,44 +1,47 @@
 package br.com.fatecsjc.models;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bson.Document;
-import org.bson.conversions.Bson;
-
+import br.com.fatecsjc.config.Database;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.FindOneAndUpdateOptions;
+import org.bson.Document;
+import org.bson.conversions.Bson;
 
-import br.com.fatecsjc.config.Database;
-
-public class ProfessorModel {
+public class Professor {
 
 	MongoDatabase db = Database.getConnection();
 
-	public ArrayList<Document> myProjects(Document email) {
-		MongoCollection<Document> projetos = db.getCollection("projeto");
+//	public ArrayList<Document> myProjects(Document email) {
+//		MongoCollection<Document> projetos = db.getCollection("projeto");
+//
+//		ArrayList<Document> projects = new ArrayList<Document>();
+//
+//		FindIterable<Document> found = projetos.find();
+//
+//		for (Document d : found) {
+//			List<String> emails = (ArrayList<String>) d.get("responsavel-professor");
+//
+//			for (String emailFromProject : emails) {
+//				String emailFromUser = (String) email.get("email");
+//
+//				if (emailFromProject.equals(emailFromUser)) {
+//					projects.add(d);
+//				}
+//			}
+//		}
+//
+//		return projects;
+//	}
+	
+	public FindIterable<Document> myProjects(Document email) {
+	MongoCollection<Document> projetos = db.getCollection("projeto");
 
-		ArrayList<Document> projects = new ArrayList<Document>();
-
-		FindIterable<Document> found = projetos.find();
-
-		for (Document d : found) {
-			List<String> emails = (ArrayList<String>) d.get("responsavel-professor");
-
-			for (String emailFromProject : emails) {
-				String emailFromUser = (String) email.get("email");
-
-				if (emailFromProject.equals(emailFromUser)) {
-					projects.add(d);
-				}
-			}
-		}
-
-		return projects;
-	}
+	return projetos.find(new Document("responsavel-professor", (String) email.get("email")));
+}
+	
+	
 
 	public void addProjeto(Document doc) {
 		MongoCollection<Document> projeto = db.getCollection("projeto");

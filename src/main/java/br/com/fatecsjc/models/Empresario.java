@@ -1,17 +1,15 @@
 package br.com.fatecsjc.models;
 
-import org.bson.Document;
-import org.bson.conversions.Bson;
-
+import br.com.fatecsjc.config.Database;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.FindOneAndUpdateOptions;
+import org.bson.Document;
+import org.bson.conversions.Bson;
 
-import br.com.fatecsjc.config.Database;
-
-public class EmpresarioModel {
+public class Empresario {
 
 	MongoDatabase db = Database.getConnection();
 

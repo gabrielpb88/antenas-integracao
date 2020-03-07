@@ -1,22 +1,20 @@
 package br.com.fatecsjc.models;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
-
-import org.bson.Document;
-import org.bson.conversions.Bson;
-
+import br.com.fatecsjc.config.Database;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.FindOneAndUpdateOptions;
+import org.bson.Document;
+import org.bson.conversions.Bson;
 
-import br.com.fatecsjc.config.Database;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
-public class CadiModel {
+public class Cadi {
 
 	private MongoDatabase db = Database.getConnection();
 

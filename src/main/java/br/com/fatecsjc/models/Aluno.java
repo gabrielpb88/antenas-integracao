@@ -1,22 +1,20 @@
 package br.com.fatecsjc.models;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
-
-import org.bson.Document;
-import org.bson.conversions.Bson;
-
+import br.com.fatecsjc.config.Database;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.FindOneAndUpdateOptions;
+import org.bson.Document;
+import org.bson.conversions.Bson;
 
-import br.com.fatecsjc.config.Database;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
-public class AlunoModel {
+public class Aluno {
 
 	MongoDatabase db = Database.getConnection();
 
@@ -25,7 +23,6 @@ public class AlunoModel {
 		FindIterable<Document> found = projects.find(new Document("chave", chave));
 		String foundJson = StreamSupport.stream(found.spliterator(), false).map(Document::toJson)
 				.collect(Collectors.joining(", ", "[", "]"));
-		// System.out.println(foundJson);
 		return foundJson;
 	}
 
@@ -35,27 +32,31 @@ public class AlunoModel {
 		FindIterable<Document> found = projects.find(new Document("responsavel-aluno", emailAluno));
 		String foundJson = StreamSupport.stream(found.spliterator(), false).map(Document::toJson)
 				.collect(Collectors.joining(", ", "[", "]"));
-		// System.out.println(foundJson);
 		return foundJson;
 	}
 
-	public String buscaSemDono() {
+	public String buscaProjetoSemAlunoResponsavel() {
 		MongoCollection<Document> projects = db.getCollection("projeto");
 		FindIterable<Document> found = projects.find(new Document("responsavel-aluno", ""));
 		String foundJson = StreamSupport.stream(found.spliterator(), false).map(Document::toJson)
 				.collect(Collectors.joining(", ", "[", "]"));
-		// System.out.println(foundJson);
 		return foundJson;
 	}
 
-	public Document atribuirAluno(String emailAluno, String _id) {
+	/**
+	 *
+	 * @param emailAluno Email do aluno
+	 * @param _id id do projeto ao qual o aluno será responsável
+	 * @return Retorna o projeto
+	 */
+	public Document atribuirAlunoResponsavelParaUmProjeto(String emailAluno, String _id) {
 
 		MongoCollection<Document> projects = db.getCollection("projeto");
-		Document found = projects.find(new Document("_id", _id)).first();
+		Document projeto = projects.find(new Document("_id", _id)).first();
 		BasicDBObject searchQuery = new BasicDBObject().append("_id", _id);
-		found.put("responsavel-professor", emailAluno);
-		projects.replaceOne(searchQuery, found);
-		return found;
+		projeto.put("responsavel-professor", emailAluno);
+		projects.replaceOne(searchQuery, projeto);
+		return projeto;
 	}
 
 	public Document atribuir(String emailAluno, String _id) {
@@ -70,35 +71,42 @@ public class AlunoModel {
 			return null;
 	}
 
-	public Document getProject(String _id) {
-		MongoCollection<Document> projects = db.getCollection("projeto");
-		Document found = projects.find(new Document("_id", _id)).first();
-		return found;
+
+
+	/**
+	 * Adiciona um novo aluno
+	 * @param novoAluno Aluno a ser adicionado
+	 */
+	public void addAluno(Document novoAluno) {
+		MongoCollection<Document> alunosCollection = db.getCollection("alunos");
+		alunosCollection.insertOne(novoAluno);
 	}
 
-	public void addAluno(Document doc) {
-		MongoCollection<Document> researches = db.getCollection("alunos");
-		researches.insertOne(doc);
-	}
-
-	public void addProjeto(Document doc) {
-		MongoCollection<Document> projeto = db.getCollection("projeto");
-		projeto.insertOne(doc);
-	}
-
+	/**
+	 * Faz o login do aluno
+	 * @param email email do aluno
+	 * @param senha senha do aluno
+	 * @return retorna um Documento contendo o aluno
+	 */
 	public Document login(String email, String senha) {
 		MongoCollection<Document> alunos = db.getCollection("alunos");
-		Document found = alunos.find(new Document("email", email).append("senha", senha)).first();
+		Document aluno = alunos.find(new Document("email", email).append("senha", senha)).first();
 
-		return found;
+		return aluno;
 	}
 
+
+	/**
+	 * Atualiza o aluno passado como parametro
+	 * @param aluno a ser atualizado
+	 * @return retorna o aluno atualizado
+	 */
 	public Document updateAluno(Document aluno) {
 		MongoCollection<Document> alunos = db.getCollection("alunos");
 		BasicDBObject query = new BasicDBObject();
 		query.append("_id", aluno.get("_id"));
 		Bson newDocument = new Document("$set", aluno);
-		return alunos.findOneAndUpdate(query, newDocument, (new FindOneAndUpdateOptions()).upsert(true));
+		return alunos.findOneAndUpdate(query, newDocument);
 	}
 
 	public Document procurarEmail(String email) {
