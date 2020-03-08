@@ -40,9 +40,7 @@ public class ProjetoController {
             });
 
             post("", (req, res) -> {
-                res.header("Access-Control-Allow-Origin", "*");
                 String jsonString = req.body();
-
                 Document project = Document.parse(jsonString);
                 service.save(project);
 
@@ -50,13 +48,11 @@ public class ProjetoController {
             });
 
             put("", (req, res) -> {
-                res.header("Access-Control-Allow-Origin", "*");
                 return service.update(Document.parse(req.body())) == null ? "projeto não encontrado"
                         : "projeto deletado";
             });
 
             delete("", (req, res) -> {
-                res.header("Access-Control-Allow-Origin", "*");
                 return service.delete(Document.parse(res.body())).getDeletedCount() > 0;
             });
         });

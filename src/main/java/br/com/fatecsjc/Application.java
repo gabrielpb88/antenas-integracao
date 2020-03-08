@@ -3,6 +3,7 @@ package br.com.fatecsjc;
 import static spark.Spark.port;
 import static spark.Spark.staticFileLocation;
 
+import br.com.fatecsjc.config.CorsFilter;
 import org.bson.Document;
 
 import br.com.fatecsjc.controllers.AlunoController;
@@ -38,6 +39,7 @@ public class Application {
 		staticFileLocation("/static");
 
 		initializeControllers();
+		CorsFilter.apply();
 
 //		Descomente a linha abaixo para popular o banco com dados mockados
 //		mockModels();
