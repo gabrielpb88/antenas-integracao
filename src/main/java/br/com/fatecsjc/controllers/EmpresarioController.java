@@ -98,18 +98,15 @@ public class EmpresarioController {
      * É chamado quando o usuario recebe o link de ativação no email
      */
     public void ativarUsuario() {
-        get("/active/empresario/:email", new Route() {
-            @Override
-            public Object handle(final Request request, final Response response) {
-                String email = new String(Base64.getDecoder().decode(request.params("email")));
-                Document found = empresarioModel.findByEmail(email);
-                found.replace("ativo", true);
-                empresarioModel.update(found);
-                if (!found.isEmpty()) {
-                    response.redirect("http://localhost:8081/");
-                }
-                return null;
+        get("/active/empresario/:email", (req, res) -> {
+            String email = new String(Base64.getDecoder().decode(req.params("email")));
+            Document empresario = service.findByEmail(email);
+            empresario.replace("ativo", true);
+            service.update(empresario);
+            if (!empresario.isEmpty()) {
+                res.redirect("http://localhost:8081/");
             }
+            return null;
         });
     }
 }
