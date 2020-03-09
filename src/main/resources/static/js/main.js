@@ -8,7 +8,7 @@
     location.replace('/');
   }
   else {
-    $.post("/is-auth", JSON.stringify({ token }), 'json')
+    $.post("/empresarios/is-auth", JSON.stringify({ token }), 'json')
         .done(function(userInfo){
           empresario = JSON.parse(userInfo);
           $('[data-empresario-nome]').text(` | ${ empresario.nome }`);

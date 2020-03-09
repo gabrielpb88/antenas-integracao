@@ -56,36 +56,19 @@ public class EmpresarioController {
      * Verifica se o usuário está autenticado
      */
     public void IsAuth() {
-        post("/is-auth", new Route() {
-            @Override
-            public Object handle(final Request request, final Response response) {
-
-                try {
-                    // setting
-                    JSONObject myjson = new JSONObject(request.body());
-                    Jwt AuthEngine = new Jwt();
-
-                    // try to find user
-                    String emailOrNull = AuthEngine.verifyJwt((myjson.getString("token")));
-                    if (emailOrNull == null) {
-                        response.status(404);
-                        return false;
-                    } else {
-
-                        Document empresario = empresarioModel.findByEmail(emailOrNull);
-
-                        if (empresario == null) {
-                            response.status(404);
-                            return false;
-                        }
-
-                        response.status(200);
-                        return empresario.toJson();
-                    }
-
-                } catch (JSONException ex) {
+        post("/empresarios/is-auth", (req, res) -> {
+            try {
+                String token = new JSONObject(req.body()).getString("token");
+                String email = new Jwt().verifyJwt(token);
+                Document empresario = service.findByEmail(email);
+                if (empresario == null) {
+                    res.status(404);
                     return false;
                 }
+                res.status(200);
+                return empresario.toJson();
+            } catch (Exception ex) {
+                return false;
             }
         });
     }
@@ -95,7 +78,7 @@ public class EmpresarioController {
      */
     public void cadastroEmpresario() {
 
-        get("/empresarios", (req, res) ->{
+        get("/empresarios", (req, res) -> {
             return TextUtils.converter(service.findAll());
         });
 
