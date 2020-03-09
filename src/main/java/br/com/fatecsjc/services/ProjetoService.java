@@ -74,9 +74,5 @@ public class ProjetoService {
 	public FindIterable<Document> findAll() {
 		return projetoRepository.findAll();
 	}
-
-	public Document findById(String id) {
-		return projetoRepository.findById(id);
-	}
-
+	
 }

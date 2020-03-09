@@ -3,10 +3,6 @@ package br.com.fatecsjc.controllers;
 import br.com.fatecsjc.services.ProjetoService;
 import br.com.fatecsjc.utils.TextUtils;
 import org.bson.Document;
-import org.json.JSONException;
-
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import static spark.Spark.*;
 

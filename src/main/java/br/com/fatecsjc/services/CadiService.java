@@ -12,10 +12,6 @@ public class CadiService {
 		cadiRepository = new CadiRepository();
 	}
 
-	public FindIterable<Document> findbyField(String chave, String valor) {
-		 return cadiRepository.findbyField(chave, valor);
-	}
-
 	public void save(Document cadi) {
 		cadiRepository.save(cadi);
 	}
