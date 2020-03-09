@@ -13,7 +13,7 @@
           empresario = JSON.parse(userInfo);
           $('[data-empresario-nome]').text(` | ${ empresario.nome }`);
 
-          $.get('/buscaprojetoporempresario', empresario.email)
+          $.get('/projetos/empresario', empresario.email)
               .done(function(projetos){
                 projects = JSON.parse(projetos);
                 insertProjectsOnTable(projects);

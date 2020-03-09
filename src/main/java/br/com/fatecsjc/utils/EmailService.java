@@ -5,19 +5,24 @@ import org.apache.commons.mail.SimpleEmail;
 import org.bson.Document;
 
 import java.util.Base64;
+import java.util.concurrent.Executors;
 
-public class emailService {
+public class EmailService {
     private static final String HOST = "smtp.gmail.com";
     private static final int PORT = 465;
     private static final boolean SSL_FLAG = true;
 
     private Document destinatario;
 
-    public emailService(Document destinatario) {
+    public EmailService(Document destinatario) {
         this.destinatario = destinatario;
     }
 
-    public void sendSimpleEmail(String emailSubject, String emailBody, String module) {
+    public void sendSimpleEmail(String emailSubject, String emailBody, String module){
+        Executors.newSingleThreadExecutor().execute(() -> asyncSendSimpleEmail(emailSubject, emailBody, module));
+    }
+
+    private void asyncSendSimpleEmail(String emailSubject, String emailBody, String module) {
         String userName = "sendEmailMD@gmail.com";
         String password = "210418md";
 
@@ -41,4 +46,5 @@ public class emailService {
             ex.printStackTrace();
         }
     }
+
 }

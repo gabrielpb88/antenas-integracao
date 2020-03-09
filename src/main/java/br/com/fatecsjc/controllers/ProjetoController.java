@@ -55,6 +55,10 @@ public class ProjetoController {
             delete("", (req, res) -> {
                 return service.delete(Document.parse(res.body())).getDeletedCount() > 0;
             });
+
+            get("/empresario", (req, res) -> {
+                return TextUtils.converter(service.findByEmpresario(req.queryString()));
+            });
         });
     }
 }

@@ -42,7 +42,7 @@ $("#btn-cadastro").click(function(event) {
 
     var jsonString = JSON.stringify(json);
 
-    $.post("/cadastroempresario", jsonString, 'json')
+    $.post("/empresarios", jsonString, 'json')
         .done(function(){
             alert('Te enviamos um email com um link, acesse-o para ativar sua conta.');
             location.reload();
@@ -68,7 +68,7 @@ $('[data-login-form]').on('submit', function(event){
         senha: pass
     };
 
-    $.post("/Auth", JSON.stringify(data), 'json')
+    $.post("/empresarios/login", JSON.stringify(data), 'json')
         .done(function(token){
             localStorage.setItem('token', token);
             location.replace('/empresa.html');

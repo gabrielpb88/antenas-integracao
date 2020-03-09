@@ -3,7 +3,6 @@ package br.com.fatecsjc.controllers;
 import static spark.Spark.get;
 import static spark.Spark.post;
 
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -14,9 +13,8 @@ import org.bson.Document;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import br.com.fatecsjc.models.Professor;
 import br.com.fatecsjc.utils.Jwt;
-import br.com.fatecsjc.utils.emailService;
+import br.com.fatecsjc.utils.EmailService;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -157,7 +155,7 @@ public class ProfessorController {
 
 					if (found == null || found.isEmpty()) {
 						model.addProfessor(userData);
-						new emailService(userData).sendSimpleEmail("Antenas - Sua confirmação de conta",
+						new EmailService(userData).sendSimpleEmail("Antenas - Sua confirmação de conta",
 								"Por favor, para confirmar sua conta, clique no link: ", "professor");
 						return userData.toJson();
 					} else {

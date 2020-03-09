@@ -74,7 +74,6 @@ public class Application {
 		controller.inserirCADI();
 		controller.search();
 		controller.loginCadi();
-//		controller.projetos();
 		controller.atribuirProjeto();
 		controller.listCadi();
 		controller.listProf();
@@ -90,11 +89,8 @@ public class Application {
 	private static void initializeEmpresarioController() {
 		EmpresarioController controller = new EmpresarioController(empresarioModel);
 		controller.cadastroEmpresario();
-		controller.getEmpresarios();
-		controller.loginEmpresario();
-		controller.getProjectByEmpresario();
 		controller.ativarUsuario();
-		controller.Auth();
+		controller.Autenticar();
 		controller.IsAuth();
 	}
 

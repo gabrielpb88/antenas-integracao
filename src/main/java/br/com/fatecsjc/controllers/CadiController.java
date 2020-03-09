@@ -4,7 +4,7 @@ import br.com.fatecsjc.models.Cadi;
 import br.com.fatecsjc.services.CadiService;
 import br.com.fatecsjc.services.ProjetoService;
 import br.com.fatecsjc.utils.Jwt;
-import br.com.fatecsjc.utils.emailService;
+import br.com.fatecsjc.utils.EmailService;
 import org.bson.Document;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -149,7 +149,7 @@ public class CadiController {
 					Document found = model.searchByEmail(userData.getString("email"));
 					if (found == null || found.isEmpty()) {
 						model.addCADI(userData);
-						new emailService(userData).sendSimpleEmail("Antenas - Sua confirma��o de conta",
+						new EmailService(userData).sendSimpleEmail("Antenas - Sua confirma��o de conta",
 								"Por favor, para confirmar sua conta, clique no link: ", "cadi");
 						return userData.toJson();
 					} else {
