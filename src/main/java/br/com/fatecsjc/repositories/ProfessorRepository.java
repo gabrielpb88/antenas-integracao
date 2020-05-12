@@ -1,6 +1,7 @@
 package br.com.fatecsjc.repositories;
 
 import br.com.fatecsjc.config.Database;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
@@ -35,4 +36,7 @@ public class ProfessorRepository {
         return professorCollection.find(Filters.eq("email", email)).first();
     }
 
+    public FindIterable<Document> findAll() {
+        return professorCollection.find();
+    }
 }

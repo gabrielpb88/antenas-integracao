@@ -18,7 +18,7 @@ public class Database {
 	public static MongoDatabase getConnection() {
 		if(db == null) {
 			mongoClient = MongoClients.create("mongodb://172.17.0.2");
-			db = mongoClient.getDatabase("app");
+			db = mongoClient.getDatabase("projetoantenas");
 		}
 		
 		return db;

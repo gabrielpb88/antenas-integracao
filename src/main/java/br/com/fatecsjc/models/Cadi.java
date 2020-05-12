@@ -107,15 +107,6 @@ public class Cadi {
 		return listCadi;
 	}
 
-	// test profs
-	public String listProf() {
-		MongoCollection<Document> prof = db.getCollection("professor");
-		FindIterable<Document> found = prof.find();
-		String foundJson = StreamSupport.stream(found.spliterator(), false).map(Document::toJson)
-				.collect(Collectors.joining(", ", "[", "]"));
-		return foundJson;
-	}
-
 	public void alterarId(String id, Document alteracao) {
 		Document filter = new Document("id", id);
 		MongoCollection<Document> cadiF = db.getCollection("cadi");
@@ -142,6 +133,5 @@ public class Cadi {
 		query.append("_id", projeto.get("_id"));
 		Bson newDocument = new Document("$set", projeto);
 		return projetos.findOneAndUpdate(query, newDocument, (new FindOneAndUpdateOptions()).upsert(true));
-	}
-
+	} 
 }

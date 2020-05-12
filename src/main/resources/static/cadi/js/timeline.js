@@ -284,7 +284,7 @@ var Timeline = function (endpoint) {
            	var profs = [];
            	  $(document).ready(function () {
            	  		
-                $.getJSON("/listarProf", function(data){
+                $.getJSON("/professores", function(data){
                   
                   $.each(data, function(i){
                       

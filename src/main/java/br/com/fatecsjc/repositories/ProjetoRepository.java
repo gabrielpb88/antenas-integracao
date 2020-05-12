@@ -7,6 +7,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.DeleteResult;
+import org.bson.BsonDocument;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
@@ -63,7 +64,7 @@ public class ProjetoRepository {
 	}
 
 	public Document update(Document projeto) {
-		return collection.findOneAndUpdate(Filters.eq("_id", projeto.get("_id")), projeto);
+		return collection.findOneAndReplace(Filters.eq("_id", new ObjectId(projeto.get("_id").toString())), projeto);
 	}
 
 	public DeleteResult delete(Document project) {

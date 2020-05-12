@@ -29,7 +29,7 @@ if(session_login == null){
           insertProjectsOnTable(projects);
       });
 
-      $.get('/projetosemcadi')
+      $.get('/projetos/semcadi')
           .done(function(projetos){
           projects = JSON.parse(projetos);
           insertSemDono(projects);
@@ -212,7 +212,7 @@ if(session_login == null){
           $.get('/searchEmpresario/'+email)
           .done( data => {
             //, function(data){
-              console.log(data)
+              console.log('caralio')
               empresa = JSON.parse(data).empresa;
               telefone = JSON.parse(data).telefone;
               console.log(empresa)
@@ -316,7 +316,7 @@ if(session_login == null){
           <li>${user.nivel == 2 ? "Administrador" : "Usuario CADI"}</li>`);
           /* </> Pupula Usuário Data */
           if(user.nivel == 2) {
-            $.post("/listarCadi", function(users){
+            $.get("/cadi", function(users){
               _isAdmin(users);
             }, "json");
             

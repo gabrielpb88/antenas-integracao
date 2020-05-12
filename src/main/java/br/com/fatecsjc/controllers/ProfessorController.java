@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import br.com.fatecsjc.models.Professor;
+import br.com.fatecsjc.services.ProfessorService;
+import br.com.fatecsjc.utils.TextUtils;
 import com.mongodb.client.FindIterable;
 import org.bson.Document;
 import org.json.JSONException;
@@ -23,10 +25,18 @@ public class ProfessorController {
 
 	private Professor model;
 	private String WhoIsauth;
+	private ProfessorService service;
 
 	public ProfessorController(Professor model) {
 		super();
 		this.model = model;
+		service = new ProfessorService();
+	}
+
+	public void initiate(){
+		get("/professores", (req, res) -> {
+			return TextUtils.converter(service.findAll());
+		});
 	}
 
 	public String getWhoIsauth() {

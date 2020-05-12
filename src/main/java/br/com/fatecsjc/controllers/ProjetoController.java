@@ -38,7 +38,7 @@ public class ProjetoController {
             post("", (req, res) -> {
                 String jsonString = req.body();
                 Document project = Document.parse(jsonString);
-                service.save(project);
+                service.update(project);
 
                 return project.toJson();
             });

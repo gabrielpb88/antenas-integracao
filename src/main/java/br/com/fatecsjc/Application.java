@@ -1,28 +1,21 @@
 package br.com.fatecsjc;
 
-import static spark.Spark.port;
-import static spark.Spark.staticFileLocation;
-
 import br.com.fatecsjc.config.CorsFilter;
-import org.bson.Document;
-
-import br.com.fatecsjc.controllers.AlunoController;
-import br.com.fatecsjc.controllers.CadiController;
-import br.com.fatecsjc.controllers.EmpresarioController;
-import br.com.fatecsjc.controllers.ProfessorController;
-import br.com.fatecsjc.controllers.ProjetoController;
+import br.com.fatecsjc.controllers.*;
 import br.com.fatecsjc.models.Aluno;
 import br.com.fatecsjc.models.Cadi;
-import br.com.fatecsjc.models.Empresario;
 import br.com.fatecsjc.models.Professor;
 import br.com.fatecsjc.models.Projeto;
+import org.bson.Document;
+
+import static spark.Spark.port;
+import static spark.Spark.staticFileLocation;
 
 public class Application {
 	private static final Projeto projetoModel = new Projeto(); // usado apenas para mockar projetos
 	private static final Cadi cadiModel = new Cadi();
 	private static final Professor professorModel = new Professor();
 	private static final Aluno alunoModel = new Aluno();
-	private static final Empresario empresarioModel = new Empresario();
 
 	public static void main(String[] args) {
 
@@ -76,7 +69,6 @@ public class Application {
 		controller.loginCadi();
 		controller.atribuirProjeto();
 		controller.listCadi();
-		controller.listProf();
 		controller.inserirReuniao();
 		controller.Auth();
 		controller.ativarUsuario();
@@ -87,11 +79,9 @@ public class Application {
 	 * Inicializa as rotas do Empresario
 	 */
 	private static void initializeEmpresarioController() {
-		EmpresarioController controller = new EmpresarioController(empresarioModel);
+		EmpresarioController controller = new EmpresarioController();
 		controller.cadastroEmpresario();
 		controller.ativarUsuario();
-		controller.Autenticar();
-		controller.IsAuth();
 	}
 
 	/**
@@ -106,6 +96,7 @@ public class Application {
 		controller.searchprofessor();
 		controller.atualizaProfessor();
 		controller.inserirProfessor();
+		controller.initiate();
 	}
 
 	/**
@@ -115,7 +106,6 @@ public class Application {
 		AlunoController controller = new AlunoController(alunoModel);
 		controller.cadastroAluno();
 		controller.search();
-//		controller.projetos();
 		controller.atribuirProjeto();
 		controller.entregaProjeto();
 		controller.ativarUsuario();

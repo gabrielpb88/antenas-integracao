@@ -1,6 +1,7 @@
 package br.com.fatecsjc.services;
 
 import br.com.fatecsjc.repositories.ProfessorRepository;
+import com.mongodb.client.FindIterable;
 import org.bson.Document;
 
 public class ProfessorService {
@@ -28,4 +29,7 @@ public class ProfessorService {
         return professorRepository.findByEmail(email);
     }
 
+    public FindIterable<Document> findAll() {
+        return professorRepository.findAll();
+    }
 }

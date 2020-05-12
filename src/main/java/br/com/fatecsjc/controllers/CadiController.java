@@ -2,9 +2,11 @@ package br.com.fatecsjc.controllers;
 
 import br.com.fatecsjc.models.Cadi;
 import br.com.fatecsjc.services.CadiService;
+import br.com.fatecsjc.services.ProfessorService;
 import br.com.fatecsjc.services.ProjetoService;
 import br.com.fatecsjc.utils.Jwt;
 import br.com.fatecsjc.utils.EmailService;
+import br.com.fatecsjc.utils.TextUtils;
 import org.bson.Document;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,23 +22,17 @@ import static spark.Spark.post;
 public class CadiController {
 
 	private Cadi model;
-	private CadiService cadiService;
+	private CadiService service;
 	private ProjetoService projetoService;
+	private ProfessorService professorService;
 	private String WhoIsauth;
 
 	public CadiController(Cadi model) {
 		super();
 		this.model = model;
-		this.cadiService = new CadiService();
+		this.service = new CadiService();
 		this.projetoService = new ProjetoService();
-	}
-
-	public String getWhoIsauth() {
-		return WhoIsauth;
-	}
-
-	public void setWhoIsauth(String whoIsauth) {
-		WhoIsauth = whoIsauth;
+		this.professorService = new ProfessorService();
 	}
 
 	public void Auth() { // Gera um token de autenticacaoo para o usuario
@@ -70,27 +66,6 @@ public class CadiController {
 		});
 	}
 
-	public boolean IsAuth(String body) { // Verifica se o usuario esta autenticado
-		try {
-			// setting
-			JSONObject myjson = new JSONObject(body);
-			Jwt AuthEngine = new Jwt();
-
-			// try to find user
-			String emailOrNull = AuthEngine.verifyJwt((myjson.getString("token")));
-
-			if (emailOrNull == null) {
-				return false;
-			} else {
-				setWhoIsauth(emailOrNull);
-				return true;
-			}
-
-		} catch (JSONException ex) {
-			return false;
-		}
-	}
-
 	public void ativarUsuario() { // chamado quando o usuario recebe o link de ativacao no email
 		get("/active/cadi/:email", new Route() {
 			@Override
@@ -109,7 +84,6 @@ public class CadiController {
 		post("/cadi", new Route() {
 			@Override
 			public Object handle(Request request, Response response) throws Exception {
-				response.header("Access-Control_Allow-Origin", "*");
 				JSONObject json = new JSONObject(request.body());
 				String email = json.getString("email");
 				String senha = json.getString("senha");
@@ -123,14 +97,12 @@ public class CadiController {
 				} catch (NullPointerException e) {
 					return null;
 				}
-
 			}
 		});
 	}
 
 	public void atribuirProjeto() {
 		post("/cadi/semresponsavelcadi", (Request request, Response response) -> {
-			response.header("Access-Control-Allow-Origin", "*");
 			projetoService.atribuirCadiResponsavel(Document.parse(request.body()));
 			return model.buscaSemDono();
 		});
@@ -142,7 +114,6 @@ public class CadiController {
 			@Override
 			public Object handle(final Request request, final Response response) {
 				try {
-					response.header("Access-Control-Allow-Origin", "*");
 					String jsonString = request.body();
 					Document userData = Document.parse(jsonString);
 					userData.append("ativo", false);
@@ -164,10 +135,6 @@ public class CadiController {
 
 	public void atualizaCadi() {
 		post("/updateCadi", (Request request, Response response) -> {
-
-			response.header("Access-Control-Allow-Origin", "*");
-			JSONObject json = new JSONObject(request.body());
-
 			model.updateCadi(Document.parse(request.body()));
 			return model.buscaSemDono();
 		});
@@ -179,6 +146,7 @@ public class CadiController {
 		});
 
 		get("/searchEmpresario/:email", (request, response) -> {
+			System.out.println(model.searchEmpresario(request.params("email")).toJson());
 			return model.searchEmpresario(request.params("email")).toJson();
 		});
 
@@ -192,14 +160,14 @@ public class CadiController {
 			@Override
 			public Object handle(final Request request, final Response response) {
 				String email = request.queryString();
-				return model.buscaPorDono(email);
+				return TextUtils.converter(projetoService.findByCadi(email));
 			}
 		});
-		get("/projetosemcadi", (request, response) -> {
-			return model.buscaSemDono();
+		get("/projetos/semcadi", (request, response) -> {
+			return TextUtils.converter(projetoService.findWithoutCadi());
 		});
 
-		post("/putProf", (request, response) -> {
+		post("/ ", (request, response) -> {
 			Document projetoComProfessor = Document.parse(request.body());
 			model.updateProjeto(projetoComProfessor);
 			return projetoComProfessor.toJson();
@@ -229,17 +197,9 @@ public class CadiController {
 	}
 
 	public void listCadi() {
-		post("/listarCadi", (req, res) -> {
-			return model.listCadi();
+		get("/cadi", (req, res) -> {
+			return service.findAll();
 		});
 	}
 
-	public void listProf() {
-		get("/listarProf", new Route() {
-			@Override
-			public Object handle(final Request request, final Response response) {
-				return model.listProf();
-			}
-		});
-	}
 }
