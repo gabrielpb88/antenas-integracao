@@ -80,10 +80,6 @@ $('#form_cadastro').submit(function(e){
         });
 	    fechaPopupCadastro(event);
     }
-    else
-    {
-    	alert("O cadastro só pode ser realizado com seu e-mail institucional");
-    }
 });
 
 

@@ -196,7 +196,7 @@
   }
 
   $('[data-publish-project]').click(function(e) {
-    
+
     let formNewProject = $('[data-form-new-project]');
     let inputsData = formNewProject.serializeArray();
     let project = {
@@ -206,19 +206,15 @@
     };
 
     inputsData.forEach(input => {
-      project[input.name] = input.value; 
+      project[input.name] = input.value;
     });
 
     $.ajax({
-      type: "POST",
+      type: 'POST',
       url: '/projetos',
-      data: JSON.stringify(project),
-      success: function() {
-        location.reload();
-      },
-      dataType: 'json'
-    });
-  });
+      data: JSON.stringify(project)
+    }).done(() => location.reload());
+  })
 
   $('[data-empresario-logout]').click(function(e){
 

@@ -78,30 +78,33 @@ var Timeline = function (endpoint) {
 
       $('[aceitar-avaInit]').click(function (e) {
         if (projeto.fase === 1) {
-          $.post("/pulafase", JSON.stringify({'_id':projeto._id, 'fase':2}), "json");
-          location.reload();
+          $.ajax({ type: 'PUT', url: '/projetos', data: JSON.stringify({'_id':projeto._id, 'fase':2 })})
+              .done(() => location.reload());
         }
         if(projeto.fase === 3){
-          $.post("/pulafase", JSON.stringify({'_id':projeto._id, 'fase':4}), "json");
-          location.reload();
+          $.ajax({ type: 'PUT', url: '/projetos', data: JSON.stringify({'_id':projeto._id, 'fase':4 })})
+              .done(() => location.reload());
         }
         if(projeto.fase === 4){
           var dataEntrega= $('#formGroupInserirEntrega').val();  
           alert(dataEntrega);
-
           alert(datas);
-          $.post("/pulafase", JSON.stringify({'_id':projeto._id, 'reuniao': {'datas-possiveis':datas}, 'dataEntrega':dataEntrega, 'responsavel-professor': $('#professor').val()}), "json");
-          location.reload();
+          $.ajax({ type: 'PUT', url: '/projetos',
+            data: JSON.stringify({'_id':projeto._id, 'reuniao': {'datas-possiveis':datas}, 'dataEntrega':dataEntrega, 'responsavel-professor': $('#professor').val()})})
+              .done(() => location.reload());
         }
-        if (projeto.fase == 5){
-          $.post("/pulafase", JSON.stringify({'_id':projeto._id, 'reuniao' : {'data':dataReuniao}}), "json");
+        if (projeto.fase === 5){
+          $.ajax({ type: 'PUT', url: '/projetos',
+            data: JSON.stringify({'_id':projeto._id, 'reuniao' : {'data':dataReuniao}})})
+              .done(() => location.reload());
         }
       });
       
       $('[recusar]').click(function (e) {
     	  	var rec = document.getElementById('recusa');
-    	  	$.post("/pulafase", JSON.stringify({'_id':projeto._id, 'status' : {'negado':true, 'motivo':rec.value}}), "json");
-    	  	location.reload();
+            $.ajax({ type: 'PUT', url: '/projetos',
+              data: JSON.stringify({'_id':projeto._id, 'status' : {'negado':true, 'motivo':rec.value}})})
+                .done(() => location.reload());
         });
       
     }
@@ -219,8 +222,6 @@ var Timeline = function (endpoint) {
              var local = $('#localReuniao');
             $("#insere-data").click(function () {           
               var index = datas.length;
-              //var linha = data.val().toString()+" "+hora.val().toString()+" "+local.val().toString();
-              //linhas.push(linha);
               var linha = new Object();
               linha.data = data.val().toString();
               linha.hora = hora.val().toString();
@@ -288,7 +289,7 @@ var Timeline = function (endpoint) {
                   
                   $.each(data, function(i){
                       
-                    profs.push("<option value="+this.email+">" + "Nome: " + this.name + " | Email: " + this.email + "</option> ");
+                    profs.push("<option value="+this.email+">" + "Nome: " + this.nome + " | Email: " + this.email + "</option> ");
                   });	
 
                 $('#professor').append(profs);

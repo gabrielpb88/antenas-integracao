@@ -14,8 +14,8 @@ public class ProjetoService {
 		projetoRepository = new ProjetoRepository();
 	}
 
-	public void save(Document projeto) {
-		projetoRepository.save(projeto);
+	public Document save(Document projeto) {
+		return projetoRepository.save(projeto);
 	}
 
 	public FindIterable<Document> findByTeacher(String email) {

@@ -54,6 +54,7 @@ var Timeline = function (endpoint) {
 
         let newProject = { ...projeto };
 
+        console.log('Fase projeto: ' , projeto.fase);
         if (projeto.fase === 2) {
 
           let descCompleta = $('[data-descricao-completa]').val();
@@ -70,8 +71,11 @@ var Timeline = function (endpoint) {
               'link-externo-2': linkExterno2
             };
 
-            $.post(endpoint, JSON.stringify(newProject))
-              .done(() => location.reload());
+            $.ajax({
+              type: "PUT",
+              url: '/projetos',
+              data: JSON.stringify(newProject),
+            }).done(() => location.reload());
           }
         }
         else if (projeto.fase === 4) {

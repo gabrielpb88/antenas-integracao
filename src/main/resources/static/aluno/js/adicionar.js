@@ -35,6 +35,8 @@ $(document).ready(function () {
 	});
 
 	$('#botao-add').click(function () {
+		// TODO: incluir no projeto, o aluno logado
+
 		let codigoProjeto = $("#codigo-projetoLabel").val();
 		let email = sessionStorage.getItem("sess_email_aluno");
 
@@ -51,7 +53,17 @@ $(document).ready(function () {
 				if (!alreadyParticipate) {
 					nowBackEndData[0].alunos.push(email);
 
-					$.post("/add-projeto", JSON.stringify(nowBackEndData[0]), function (data) {
+					// $.post("/add-projeto", JSON.stringify(nowBackEndData[0]), function (data) {
+					// 	if (data != "false") {
+					// 		document.getElementById("erro-add-already").style.display = "none";
+					// 		document.getElementById("erro-add").style.display = "none";
+					// 		window.location.href = 'principal.html';
+					// 	}
+					// 	else document.getElementById("erro-add").style.display = "block";
+					// });
+
+					// TODO: buscar o projeto no banco de dados, adicionar o aluno, e chamar o endpoint abaixo
+					$.put("/projetos", JSON.stringify(nowBackEndData[0]), function (data) {
 						if (data != "false") {
 							document.getElementById("erro-add-already").style.display = "none";
 							document.getElementById("erro-add").style.display = "none";

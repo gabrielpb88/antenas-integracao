@@ -25,7 +25,6 @@ public class CadiController {
 	private CadiService service;
 	private ProjetoService projetoService;
 	private ProfessorService professorService;
-	private String WhoIsauth;
 
 	public CadiController(Cadi model) {
 		super();
@@ -178,13 +177,6 @@ public class CadiController {
 			model.updateProjeto(projetoComCadi);
 			return projetoComCadi.toJson();
 		});
-
-		post("/pulafase", (request, response) -> {
-			Document projeto = Document.parse(request.body());
-			model.updateProjeto(projeto);
-			return projeto.toJson();
-		});
-
 	}
 
 	public void inserirReuniao() {

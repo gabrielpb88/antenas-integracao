@@ -50,6 +50,7 @@ public class Professor {
 
 	public void addProfessor(Document doc) {
 		MongoCollection<Document> professor = db.getCollection("professor");
+		System.out.println(doc);
 		professor.insertOne(doc);
 	}
 

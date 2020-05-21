@@ -2,7 +2,11 @@ package br.com.fatecsjc.controllers;
 
 import br.com.fatecsjc.services.ProjetoService;
 import br.com.fatecsjc.utils.TextUtils;
+import com.mongodb.BasicDBObject;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.FindOneAndUpdateOptions;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 
 import static spark.Spark.*;
 
@@ -36,16 +40,16 @@ public class ProjetoController {
             });
 
             post("", (req, res) -> {
-                String jsonString = req.body();
-                Document project = Document.parse(jsonString);
-                service.update(project);
-
-                return project.toJson();
+                return service.save(Document.parse(req.body()));
             });
 
             put("", (req, res) -> {
-                return service.update(Document.parse(req.body())) == null ? "projeto não encontrado"
-                        : "projeto deletado";
+//                MongoCollection<Document> projetos = db.getCollection("projeto");
+//                BasicDBObject query = new BasicDBObject();
+//                query.append("_id", projeto.get("_id"));
+//                Bson newDocument = new Document("$set", projeto);
+//                return projetos.findOneAndUpdate(query, newDocument, (new FindOneAndUpdateOptions()).upsert(true));
+                return service.update(Document.parse(req.body()));
             });
 
             delete("", (req, res) -> {

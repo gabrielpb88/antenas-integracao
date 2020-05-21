@@ -1,14 +1,17 @@
 package br.com.fatecsjc.repositories;
 
 import br.com.fatecsjc.config.Database;
+import com.mongodb.BasicDBObject;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.FindOneAndUpdateOptions;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.DeleteResult;
 import org.bson.BsonDocument;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
 public class ProjetoRepository {
@@ -20,8 +23,9 @@ public class ProjetoRepository {
 		collection = db.getCollection("projeto");
 	}
 
-	public void save(Document projeto) {
+	public Document save(Document projeto) {
 		collection.insertOne(projeto);
+		return collection.find(projeto).first();
 	}
 
 	public FindIterable<Document> findByTeacher(String email) {
@@ -64,7 +68,10 @@ public class ProjetoRepository {
 	}
 
 	public Document update(Document projeto) {
-		return collection.findOneAndReplace(Filters.eq("_id", new ObjectId(projeto.get("_id").toString())), projeto);
+		Bson newDocument = new Document("$set", projeto);
+		return collection.findOneAndUpdate(
+				Filters.eq("_id", projeto.get("_id")),
+				newDocument);
 	}
 
 	public DeleteResult delete(Document project) {
