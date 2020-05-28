@@ -17,7 +17,6 @@ $(document).ready(function () {
 		}
 		if (wichParticipate) {
 			wichParticipate.map((index) => {
-				console.log(index);
 				var $tela = document.querySelector('#tpjr'),
 					HTMLTemporario = $tela.innerHTML,
 					HTMLNovo = "<tr> <th>" + projects[index].chave + "</th>"
