@@ -129,7 +129,7 @@ $('#sair').click(function(e){
 
     localStorage.removeItem('token');
     sessionStorage.setItem("sess_email_aluno", '');
-    location.replace('/aluno');
+    location.replace('/aluno/');
 })
 
 

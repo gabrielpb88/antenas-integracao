@@ -2,8 +2,8 @@ package br.com.fatecsjc.controllers;
 
 import br.com.fatecsjc.models.Aluno;
 import br.com.fatecsjc.models.Projeto;
-import br.com.fatecsjc.utils.Jwt;
 import br.com.fatecsjc.utils.EmailService;
+import br.com.fatecsjc.utils.Jwt;
 import org.bson.Document;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,8 +13,7 @@ import spark.Route;
 
 import java.util.Base64;
 
-import static spark.Spark.get;
-import static spark.Spark.post;
+import static spark.Spark.*;
 
 public class AlunoController {
 
@@ -116,18 +115,26 @@ public class AlunoController {
 
 	public void atribuirProjeto() {
 		post("/add-projeto", (Request request, Response response) -> {
-
-			response.header("Access-Control-Allow-Origin", "*");
 			Document json = Document.parse(request.body());
-			// System.out.println("test-4");
-
 			try {
 				Document retorno = model.updateProjeto(json);
 				if (retorno != null)
 					return retorno;
 				else
 					return false;
+			} catch (NullPointerException e) {
+				return null;
+			}
+		});
 
+		put("/add-projeto", (Request request, Response response) -> {
+			Document json = Document.parse(request.body());
+			try {
+				Document retorno = model.updateProjeto(json);
+				if (retorno != null)
+					return retorno;
+				else
+					return false;
 			} catch (NullPointerException e) {
 				return null;
 			}
