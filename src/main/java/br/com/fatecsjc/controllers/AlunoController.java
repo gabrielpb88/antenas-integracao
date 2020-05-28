@@ -16,22 +16,19 @@ import java.util.Base64;
 import static spark.Spark.get;
 import static spark.Spark.post;
 
-;
-
 public class AlunoController {
 
 	private Aluno model;
 	private Projeto projeto;
 
 	public AlunoController(Aluno model) {
-		super();
 		this.model = model;
 		this.projeto = new Projeto();
 	}
 
 	// Login com token de autenticacao
 	public void loginAluno() {
-		post("/aluno", new Route() {
+		post("/aluno/auth", new Route() {
 			@Override
 			public Object handle(final Request request, final Response response) {
 				try {

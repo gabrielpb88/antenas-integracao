@@ -37,7 +37,7 @@ $('[data-login-form]').on('submit', function(event){
         senha: senha
     };
 
-    $.post("/aluno", JSON.stringify(dados) , 'json')
+    $.post("/aluno/auth", JSON.stringify(dados) , 'json')
         .done(function(token){
             localStorage.setItem('token', token);
             sessionStorage.setItem("sess_email_aluno", dados.email);
