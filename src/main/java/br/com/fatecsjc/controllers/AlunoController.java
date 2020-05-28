@@ -138,12 +138,10 @@ public class AlunoController {
 	}
 
 	public void cadastroAluno() {
-
 		post("/aluno-cadastro", new Route() {
 			@Override
 			public Object handle(final Request request, final Response response) {
 				try {
-					response.header("Access-Control-Allow-Origin", "*");
 					String jsonString = request.body();
 					Document dadosAluno = Document.parse(jsonString);
 

@@ -2,11 +2,7 @@ package br.com.fatecsjc.controllers;
 
 import br.com.fatecsjc.services.ProjetoService;
 import br.com.fatecsjc.utils.TextUtils;
-import com.mongodb.BasicDBObject;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.model.FindOneAndUpdateOptions;
 import org.bson.Document;
-import org.bson.conversions.Bson;
 
 import static spark.Spark.*;
 
