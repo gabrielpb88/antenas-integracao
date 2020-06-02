@@ -46,7 +46,13 @@ public class Application {
 		initializeEmpresarioController();
 		initializeProfessorController();
 		initializeCadiController();
+		initializeMedalhaController();
 		ProjetoController.init();
+	}
+
+	private static void initializeMedalhaController() {
+		MedalhaController medalhaController = new MedalhaController();
+		medalhaController.melhadas();
 	}
 
 	/**

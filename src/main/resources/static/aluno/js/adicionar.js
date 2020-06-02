@@ -3,10 +3,7 @@ $(document).ready(function () {
 	document.getElementById('cadastro').style.display = 'none';
 
 	let email = sessionStorage.getItem("sess_email_aluno");
-	let tela = document.querySelector('#tabela-projetos');
-	let telaemail = document.getElementById('bodyemail');
 	let rota = "/projetos"
-	let retorno = {}
 
 	$.get(rota, function (projetosBE, err) {
 		
@@ -20,7 +17,6 @@ $(document).ready(function () {
 		}
 		if (wichParticipate) {
 			wichParticipate.map((index) => {
-				console.log(index);
 				var $tela = document.querySelector('#tpjr'),
 					HTMLTemporario = $tela.innerHTML,
 					HTMLNovo = "<tr> <th>" + projects[index].chave + "</th>"
@@ -35,52 +31,39 @@ $(document).ready(function () {
 	});
 
 	$('#botao-add').click(function () {
-		// TODO: incluir no projeto, o aluno logado
-
 		let codigoProjeto = $("#codigo-projetoLabel").val();
-		let email = sessionStorage.getItem("sess_email_aluno");
 
-		const retornaBack = val => {
+		function retornaBack (val) {
 			if (val=='[]') {
 				document.getElementById("erro-add").style.display = "block";
 				return false;
 			}
 			else {
 				let email = sessionStorage.getItem("sess_email_aluno");
-				let nowBackEndData = JSON.parse(val);
-				let alreadyParticipate = false;
-				alreadyParticipate = nowBackEndData[0].alunos.find(aluno => aluno == email);
-				if (!alreadyParticipate) {
-					nowBackEndData[0].alunos.push(email);
+				let projeto = JSON.parse(val)[0];
+				let alunoJaEhParticipante = false;
+				alunoJaEhParticipante = projeto.alunos.find(aluno => aluno == email);
+				if (!alunoJaEhParticipante) {
+					projeto.alunos.push(email);
 
-					// $.post("/add-projeto", JSON.stringify(nowBackEndData[0]), function (data) {
-					// 	if (data != "false") {
-					// 		document.getElementById("erro-add-already").style.display = "none";
-					// 		document.getElementById("erro-add").style.display = "none";
-					// 		window.location.href = 'principal.html';
-					// 	}
-					// 	else document.getElementById("erro-add").style.display = "block";
-					// });
+					$.ajax({ type: 'PUT', url: '/projetos', data: JSON.stringify(projeto)})
+						.done((data) => {
+							console.log(data);
 
-					// TODO: buscar o projeto no banco de dados, adicionar o aluno, e chamar o endpoint abaixo
-					$.put("/projetos", JSON.stringify(nowBackEndData[0]), function (data) {
-						if (data != "false") {
-							document.getElementById("erro-add-already").style.display = "none";
-							document.getElementById("erro-add").style.display = "none";
-							window.location.href = 'principal.html';
-						}
-						else document.getElementById("erro-add").style.display = "block";
-					});
-
+							if (data != "false") {
+								document.getElementById("erro-add-already").style.display = "none";
+								document.getElementById("erro-add").style.display = "none";
+								window.location.href = 'principal.html';
+							}
+							else document.getElementById("erro-add").style.display = "block";
+						});
 				}
 				else {
 					document.getElementById("erro-add-already").style.display = "block";
 				}
 			}
 		}
-
 		$.get("/searchaluno/" + codigoProjeto, retornaBack);
-
 	});
 
 	function abrePopupLogin(event) {

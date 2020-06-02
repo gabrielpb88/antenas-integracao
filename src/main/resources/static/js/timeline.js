@@ -93,8 +93,9 @@ var Timeline = function (endpoint) {
               }
             };
 
-            $.post(endpoint, JSON.stringify(newProject))
-              .done(() => location.reload());
+            console.log(endpoint)
+            $.ajax({ type: 'PUT', url: endpoint, data: JSON.stringify(newProject)})
+                .done(() => location.reload());
           }
         }
       });
