@@ -19,7 +19,11 @@ public class MedalhaRepository {
     }
 
     public FindIterable<Document> findByCompetencia(String competencia) {
-        return collection.find(Filters.eq("nome", competencia));
+        return collection.find(Filters.eq("competencia", competencia));
+    }
+
+    public Document findById(Document medalha) {
+        return collection.find(Filters.eq("_id", medalha.get("_id"))).first();
     }
 
     public FindIterable<Document> findAll() {
