@@ -6,12 +6,19 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.FindOneAndUpdateOptions;
+import com.mongodb.client.result.UpdateResult;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
 public class Professor {
 
-	MongoDatabase db = Database.getConnection();
+	private MongoDatabase db;
+	private MongoCollection<Document> collection;
+
+	public Professor(){
+		db = Database.getConnection();
+		collection = db.getCollection("professor");
+	}
 
 //	public ArrayList<Document> myProjects(Document email) {
 //		MongoCollection<Document> projetos = db.getCollection("projeto");
@@ -40,27 +47,16 @@ public class Professor {
 
 	return projetos.find(new Document("responsavel-professor", (String) email.get("email")));
 }
-	
-	
 
-	public void addProjeto(Document doc) {
-		MongoCollection<Document> projeto = db.getCollection("projeto");
-		projeto.insertOne(doc);
-	}
-
-	public void addProfessor(Document doc) {
-		MongoCollection<Document> professor = db.getCollection("professor");
-		System.out.println(doc);
-		professor.insertOne(doc);
+	public void addProfessor(Document professor) {
+		collection.insertOne(professor);
 	}
 
 	public Document login(String email, String senha) {
-		MongoCollection<Document> prof = db.getCollection("professor");
-		Document found = prof.find(new Document("email", email).append("senha", senha)).first();
-		return found;
+		return collection.find(new Document("email", email).append("senha", senha)).first();
 	}
 
-	public Document ativarProfessor(String email) {
+	public UpdateResult ativarProfessor(String email) {
 		Document prof = searchByEmail(email);
 		prof.replace("ativo", true);
 		return updateProfessor(prof);
@@ -82,12 +78,8 @@ public class Professor {
 		return projetos.findOneAndUpdate(query, newDocument, (new FindOneAndUpdateOptions()).upsert(true));
 	}
 
-	public Document updateProfessor(Document projeto) {
-		MongoCollection<Document> projetos = db.getCollection("professor");
-		BasicDBObject query = new BasicDBObject();
-		query.append("_id", projeto.get("_id"));
-		Bson newDocument = new Document("$set", projeto);
-		return projetos.findOneAndUpdate(query, newDocument, (new FindOneAndUpdateOptions()).upsert(true));
+	public UpdateResult updateProfessor(Document professor) {
+		return collection.replaceOne(new Document("_id", professor.get("_id")), professor);
 	}
 
 }

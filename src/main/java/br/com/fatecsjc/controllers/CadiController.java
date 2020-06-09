@@ -188,10 +188,4 @@ public class CadiController {
 		});
 	}
 
-	public void listCadi() {
-		get("/cadi", (req, res) -> {
-			return service.findAll();
-		});
-	}
-
 }

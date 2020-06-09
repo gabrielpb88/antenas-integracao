@@ -29,4 +29,8 @@ public class AlunoService {
         return alunoRepository.findAll();
     }
 
+    public Document findByEmail(String email){
+        return alunoRepository.findByEmail(email);
+    }
+
 }

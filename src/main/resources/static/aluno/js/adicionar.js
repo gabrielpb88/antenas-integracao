@@ -17,23 +17,34 @@ $(document).ready(function () {
 		}
 		if (wichParticipate) {
 			wichParticipate.map((index) => {
-				var $tela = document.querySelector('#tpjr'),
-					HTMLTemporario = $tela.innerHTML,
-					HTMLNovo = "<tr> <th>" + projects[index].chave + "</th>"
+				var $tela = document.querySelector('#tpjr');
+				var HTMLNovo = "<tr> <th>" + projects[index].chave + "</th>"
 						+ "<th>" + projects[index].titulo + "</th>" + "<th>"
 						+ projects[index].fase + "</th>"
 						+ `<th><button onclick="abrePopupEntregar(event,chave='${projects[index].chave}')">Entregar</button></th>`
 						+ "</tr>";
-				HTMLTemporario = HTMLTemporario + HTMLNovo;
-				$tela.innerHTML = HTMLTemporario;
+				$tela.innerHTML += HTMLNovo;
 			});
 		}
+
 	});
+
+	$.ajax({ type: 'GET', url: '/alunos/'+email})
+		.done((data) => {
+			const medalhas = JSON.parse(data).medalhas
+			const tabela = document.querySelector('#tmedalha')
+			medalhas.forEach(medalha => {
+				tabela.innerHTML += "<tr><td>" + medalha.nivel + "</td>"
+						+"<td>" + medalha.competencia + "</td>"
+						+"<td>" + medalha.professor + "</td></tr>"
+			})
+		})
 
 	$('#botao-add').click(function () {
 		let codigoProjeto = $("#codigo-projetoLabel").val();
 
 		function retornaBack (val) {
+			console.log(val)
 			if (val=='[]') {
 				document.getElementById("erro-add").style.display = "block";
 				return false;

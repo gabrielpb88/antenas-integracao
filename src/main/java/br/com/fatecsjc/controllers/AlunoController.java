@@ -2,6 +2,7 @@ package br.com.fatecsjc.controllers;
 
 import br.com.fatecsjc.models.Aluno;
 import br.com.fatecsjc.models.Projeto;
+import br.com.fatecsjc.services.AlunoService;
 import br.com.fatecsjc.utils.EmailService;
 import br.com.fatecsjc.utils.Jwt;
 import org.bson.Document;
@@ -17,48 +18,35 @@ import static spark.Spark.*;
 
 public class AlunoController {
 
-	private Aluno model;
+	private Aluno alunoModel;
 	private Projeto projeto;
+	private AlunoService alunoService;
 
 	public AlunoController(Aluno model) {
-		this.model = model;
+		this.alunoModel = model;
 		this.projeto = new Projeto();
+		this.alunoService = new AlunoService();
 	}
 
-	// Login com token de autenticacao
 	public void loginAluno() {
-		post("/aluno/auth", new Route() {
-			@Override
-			public Object handle(final Request request, final Response response) {
+		post("/aluno/auth", (Request req, Response res) -> {
 				try {
-					response.header("Access-Control-Allow-Origin", "*");
-					// set
+					JSONObject body = new JSONObject(req.body());
+					Jwt geradorJwt = new Jwt();
 
-					JSONObject jsonLogin = new JSONObject(request.body());
-					// Nao colocar Jwt no projeto que ser� integrado
-					Jwt autorProjeto = new Jwt();
+					Document aluno = alunoService.login(body.getString("email"), body.getString("senha"));
 
-					// try to find user
-					Document aluno = model.procurarEmail(jsonLogin.getString("email"));
-					String email = aluno.getString("email");
-					String senhaDigitada = jsonLogin.getString("senha");
-					String senhaArmazenada = aluno.getString("senha");
-					boolean usuarioAtivo = aluno.getBoolean("ativo"); // So implementar apos inserir o email service. E
-																		// Inserir condicao de usuario ativo no if
-																		// abaixo
-
-					if (email.length() > 0 && senhaDigitada.equals(senhaArmazenada) && usuarioAtivo) {
-						response.status(200);
-						return autorProjeto.GenerateJwt(email);
+					if(aluno != null && aluno.getBoolean("ativo")){
+						res.status(200);
+						return geradorJwt.GenerateJwt(body.getString("email"));
+					} else {
+						res.status(403);
+						return null;
 					}
-					response.status(403);
-					return "Usu�rio inexistente ou inativo";
-
 				} catch (JSONException ex) {
 					return "erro 500 " + ex;
 				}
-			}
-		});
+			});
 	}
 
 	public void validaAluno() { // Verifica se o usuário está autenticado
@@ -78,15 +66,15 @@ public class AlunoController {
 						return false;
 					} else {
 
-						Document empresario = model.procurarEmail(emailOrNull);
+						Document aluno = alunoModel.findByEmail(emailOrNull);
 
-						if (empresario == null) {
+						if (aluno == null) {
 							response.status(404);
 							return false;
 						}
 
 						response.status(200);
-						return empresario.toJson();
+						return aluno.toJson();
 					}
 
 				} catch (JSONException ex) {
@@ -101,9 +89,9 @@ public class AlunoController {
 			@Override
 			public Object handle(final Request request, final Response response) {
 				String email = new String(Base64.getDecoder().decode(request.params("email")));
-				Document found = model.procurarEmail(email);
+				Document found = alunoModel.findByEmail(email);
 				found.replace("ativo", true);
-				model.updateAluno(found);
+				alunoModel.updateAluno(found);
 				if (!found.isEmpty()) {
 					response.redirect("/aluno"); // 8081
 				}
@@ -117,7 +105,7 @@ public class AlunoController {
 		post("/add-projeto", (Request request, Response response) -> {
 			Document json = Document.parse(request.body());
 			try {
-				Document retorno = model.updateProjeto(json);
+				Document retorno = alunoModel.updateProjeto(json);
 				if (retorno != null)
 					return retorno;
 				else
@@ -130,7 +118,7 @@ public class AlunoController {
 		put("/add-projeto", (Request request, Response response) -> {
 			Document json = Document.parse(request.body());
 			try {
-				Document retorno = model.updateProjeto(json);
+				Document retorno = alunoModel.updateProjeto(json);
 				if (retorno != null)
 					return retorno;
 				else
@@ -141,20 +129,26 @@ public class AlunoController {
 		});
 	}
 
+	public void atribuirMedalha(){
+		put("/aluno", (Request request, Response response) -> {
+			Document body = Document.parse(request.body());
+			return alunoModel.updateAluno(body);
+		});
+	}
+
 	public void cadastroAluno() {
 		post("/aluno-cadastro", new Route() {
 			@Override
 			public Object handle(final Request request, final Response response) {
 				try {
-					String jsonString = request.body();
-					Document dadosAluno = Document.parse(jsonString);
+					Document dadosAluno = Document.parse(request.body());
 
 					dadosAluno.append("ativo", false);
 
-					Document encontrado = model.procurarEmail(dadosAluno.getString("email"));
+					Document emailJaExiste = alunoModel.findByEmail(dadosAluno.getString("email"));
 
-					if (encontrado == null || encontrado.isEmpty()) {
-						model.addAluno(dadosAluno);
+					if (emailJaExiste == null || emailJaExiste.isEmpty()) {
+						alunoModel.salvar(dadosAluno);
 						new EmailService(dadosAluno).sendSimpleEmail("Antenas - Sua confirma��o de conta",
 								"Por favor, para confirmar sua conta, clique no link:", "aluno");
 						return dadosAluno.toJson();
@@ -170,52 +164,36 @@ public class AlunoController {
 
 	public void search() {
 		get("/searchaluno/:id", (request, response) -> {
-			return model.search(request.params(":id"));
+			return alunoModel.search(request.params(":id"));
 		});
 
 		get("/dono/:email", (request, response) -> {
-			String ret = model.buscaPorDono(request.params(":email"));
+			String ret = alunoModel.buscaPorDono(request.params(":email"));
 			return ret;
 		});
 
-		get("/semdono", (request, response) -> {
-			return model.buscaProjetoSemAlunoResponsavel();
+		get("/alunos/:email", (req, res) -> {
+			return alunoService.findByEmail(req.params(":email")).toJson();
 		});
 
-		get("/putAluno", (request, response) -> {
-			return model.atribuirAlunoResponsavelParaUmProjeto(request.queryParams("emailProf"), request.queryParams("_id"));
+		get("/semdono", (request, response) -> {
+			return alunoModel.buscaProjetoSemAlunoResponsavel();
 		});
 
 		get("/put", (request, response) -> {
-			return model.atribuir(request.queryParams("emailAluno"), request.queryParams("_id"));
+			return alunoModel.atribuir(request.queryParams("emailAluno"), request.queryParams("_id"));
 		});
 
-	}
-
-	public void alterarId() {
-		post("/alterarId", (req, res) -> {
-			model.alterarId(req.queryParams("id"), new Document("$set", Document.parse(req.body())));
-			return model.listAlunos();
-		});
-	}
-
-	public void listAlunos() {
-		get("/listarAlunos", (req, res) -> {
-			return model.listAlunos();
-		});
 	}
 
 	public void entregaProjeto() {
 		post("/entregar", (req, res) -> {
-			System.out.println("test");
 			Document project = Document.parse(req.body());
-			System.out.println(project);
 			String id = project.getString("id");
-			String alunos = project.getString("autores");
 			String descricao = project.getString("descricao");
 			String linkGitHub = project.getString("link");
-			Document now = projeto.getProject(id);
-			return model.submitProject(id, now, alunos, descricao, linkGitHub);
+			Document project_id = projeto.getProject(id);
+			return alunoModel.submitProject(id, project_id, descricao, linkGitHub);
 		});
 	}
 

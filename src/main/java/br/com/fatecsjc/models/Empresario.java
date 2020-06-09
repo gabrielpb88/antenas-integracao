@@ -11,11 +11,16 @@ import org.bson.conversions.Bson;
 
 public class Empresario {
 
-	MongoDatabase db = Database.getConnection();
+	private MongoDatabase db;
+	private MongoCollection<Document> collection;
+
+	public Empresario(){
+		db = Database.getConnection();
+		collection = db.getCollection("empresario");
+	}
 
 	public void save(Document empresario) {
-		MongoCollection<Document> empresarios = db.getCollection("empresario");
-		empresarios.insertOne(empresario);
+		collection.insertOne(empresario);
 	}
 
 	public Document update(Document empresario) {
@@ -27,25 +32,11 @@ public class Empresario {
 	}
 
 	public FindIterable<Document> findAll() {
-		MongoCollection<Document> empresarios = db.getCollection("empresario");
-		FindIterable<Document> todos = empresarios.find();
-
-		for (Document empresario : todos) {
-			System.out.println(empresario);
-		}
-		return todos;
+		return collection.find();
 	}
 
 	public Document findByEmail(String email) {
-		MongoCollection<Document> users = db.getCollection("empresario");
-		Document found = users.find(new Document("email", email)).first();
-		return found;
+		return collection.find(new Document("email", email)).first();
 	}
 
-	public FindIterable<Document> getProjects(String emailEmpresario) {
-		MongoCollection<Document> projetos = db.getCollection("projeto");
-		FindIterable<Document> found = projetos.find(new Document("responsavel-empresario", emailEmpresario));
-
-		return found;
-	}
 }

@@ -34,6 +34,7 @@ public class MedalhaController {
             JSONObject body = new JSONObject(request.body());
             String nome = body.get("nome").toString();
 
+            // Daqui pra baixo é coisa do Mongo
             Document bronze = new Document();
             bronze.append("competencia", nome);
             bronze.append("medalha", "Bronze");

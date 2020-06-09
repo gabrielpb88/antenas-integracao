@@ -74,7 +74,6 @@ public class Application {
 		controller.search();
 		controller.loginCadi();
 		controller.atribuirProjeto();
-		controller.listCadi();
 		controller.inserirReuniao();
 		controller.Auth();
 		controller.ativarUsuario();
@@ -110,6 +109,7 @@ public class Application {
 	 */
 	private static void initializeAlunoController() {
 		AlunoController controller = new AlunoController(alunoModel);
+		controller.atribuirMedalha();
 		controller.cadastroAluno();
 		controller.search();
 		controller.atribuirProjeto();

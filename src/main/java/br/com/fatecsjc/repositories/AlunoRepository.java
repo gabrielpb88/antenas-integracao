@@ -13,7 +13,7 @@ public class AlunoRepository {
 
     public AlunoRepository() {
         MongoDatabase db = Database.getConnection();
-        collection = db.getCollection("aluno");
+        collection = db.getCollection("alunos");
     }
 
     public void save(Document aluno) {
@@ -30,7 +30,7 @@ public class AlunoRepository {
     }
 
     public Document findByEmail(String email) {
-        return collection.find(Filters.eq("email", email)).first();
+       return collection.find(Filters.eq("email", email)).first();
     }
 
     public FindIterable<Document> findAll() {
