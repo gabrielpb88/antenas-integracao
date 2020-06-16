@@ -31,13 +31,17 @@ $(document).ready(function () {
 
 	$.ajax({ type: 'GET', url: '/alunos/'+email})
 		.done((data) => {
-			const medalhas = JSON.parse(data).medalhas
-			const tabela = document.querySelector('#tmedalha')
-			medalhas.forEach(medalha => {
-				tabela.innerHTML += "<tr><td>" + medalha.nivel + "</td>"
+			const aluno = JSON.parse(data)
+			$('[data-aluno-nome]').text(` | ${ aluno.nome }`);
+			const medalhas = aluno.medalhas
+			if(medalhas){
+				const tabela = document.querySelector('#tmedalha')
+				medalhas.forEach(medalha => {
+					tabela.innerHTML += "<tr><td>" + medalha.nivel + "</td>"
 						+"<td>" + medalha.competencia + "</td>"
 						+"<td>" + medalha.professor + "</td></tr>"
-			})
+				})
+			}
 		})
 
 	$('#botao-add').click(function () {

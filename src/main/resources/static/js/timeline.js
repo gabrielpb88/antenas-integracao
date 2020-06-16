@@ -194,7 +194,7 @@ var Timeline = function (endpoint) {
 
     function _getNegadoHTML() {
       return `
-        <h5>Projeto negado:</h5>
+        <h4>Projeto negado:</h5>
         <p>${ projeto.status.motivo}</p>
       `;
     }

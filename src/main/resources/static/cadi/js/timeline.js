@@ -87,8 +87,6 @@ var Timeline = function (endpoint) {
         }
         if(projeto.fase === 4){
           var dataEntrega= $('#formGroupInserirEntrega').val();  
-          alert(dataEntrega);
-          alert(datas);
           $.ajax({ type: 'PUT', url: '/projetos',
             data: JSON.stringify({'_id':projeto._id, 'reuniao': {'datas-possiveis':datas}, 'dataEntrega':dataEntrega, 'responsavel-professor': $('#professor').val()})})
               .done(() => location.reload());
@@ -248,10 +246,6 @@ var Timeline = function (endpoint) {
       			datas.forEach(adcData);
       		});
             function adcData(data1){
-            		console.log(data1);
-            		/*var d = data1.slice(0, 10);
-            		var h = data1.slice(11, 16);
-            		var l = data1.slice(17, 20);*/
       				var linhadata2 = "<tr><td>"+data1.data+"</td><td>"+data1.hora+"</td><td>"+data1.local+"</td><td><button type='button'  id='test' class='botao-remove-data btn btn-danger btn-sm' remove-data='"+ind+"'>×</input></td></tr>";
               		$("#tabdata").append(linhadata2);
               		ind++;
@@ -308,7 +302,7 @@ var Timeline = function (endpoint) {
     function _getEntregasHTML() {
       return `
         ${projeto.fase == 6 ? '<span class="badge badge-success">Concluído</span>' : '<span class="badge badge-danger">Pendente</span>'}
-        <h5>Reunião</h5>
+        <h4>Reunião</h5>
         <h6>Data: ${projeto.reuniao.data}</h6>
         <h6>Horario: ${projeto.reuniao.horario}</h6>
         <h6>Local: ${projeto.reuniao.local}</h6>
@@ -343,7 +337,7 @@ var Timeline = function (endpoint) {
 
     function _getNegadoHTML() {
       return `
-        <h5>Projeto negado:</h5>
+        <h4>Projeto negado:</h5>
         <p>${ projeto.status.motivo}</p>
       `;
     }

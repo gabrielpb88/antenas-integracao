@@ -199,7 +199,6 @@ if(session_login == null){
           });
       }
 
-
       function insertSemDono(projecs) {
       
         let tbody_semdono = $('[data-semdono-table-body]');
@@ -207,20 +206,15 @@ if(session_login == null){
         projecs.forEach(project => {
           email = project['responsavel-empresario'];
           var empresa;
-          var contato;
           var $tr2
           $.get('/searchEmpresario/'+email)
           .done( data => {
-            //, function(data){
-              console.log('caralio')
-              empresa = JSON.parse(data).empresa;
-              telefone = JSON.parse(data).telefone;
-              console.log(empresa)
+              const empresario = JSON.parse(data);
               var tr2 = $.parseHTML(`<tr data-project-item="${ project._id.$oid }> 
               <th scope="row">${ project.titulo }</th>
                   <td>${ project.titulo }</td>
                   <td>${ project['descricao-breve'] }</td>
-                  <td>${ empresa }</td>
+                  <td>${ empresario.empresa }</td>
               </tr>`);
               $tr2 = $(tr2);
   
@@ -233,15 +227,18 @@ if(session_login == null){
                 let modfooter = $('[modal-footer-semdono]');
   
                 let body_sd =  $.parseHTML(`
-                <div><h5>Titulo</h5><p>${ project.titulo }</p></div>
-                <div><h5>Descricao: </h5><p>${ project['descricao-breve'] }</p></div>
-                <div><h5>Empresário: </h5><p>${ project['responsavel-empresario']}</p></div>
-                <div><h5>Empresa: </h5><p>${ empresa }</p></div>
-                <div><h5>Contato: </h5><p>${ telefone }</p></div>
+                <div><h4>Titulo</h5><p>${ project.titulo }</p></div>
+                <div><h4>Descricao:</h5><p>${ project['descricao-breve'] }</p></div>
+                <div><h4>Empresário:</h5>
+                    <p>${ empresario.nome } - ${ empresario.email}</p>
+                    
+                </div>
+                <div><h4>Empresa:</h5><p>${ empresario.empresa }</p></div>
+                <div><h4>Contato:</h5><p>${ empresario.telefone || 'Telefone não cadastrado' }</p></div>
                 `);
   
                 let foot_sd = $.parseHTML(`
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Atribuir a mim</button>
+                    <button type="button" class="btn btn-success" data-dismiss="modal">Atribuir a mim</button>
                 `);
   
                 let $submit = $(foot_sd);
@@ -271,9 +268,6 @@ if(session_login == null){
           .fail( e => console.log(e))
           
           })
-          
-          
-          
       }
 
       function userData(user){
@@ -292,7 +286,6 @@ if(session_login == null){
               }
           });
 
-
           /* Alterar Senha */
           let updateSenha = $.parseHTML(`
           <li><i class="fa fa-sign-out" aria-hidden="true"></i>
@@ -306,11 +299,8 @@ if(session_login == null){
             e.preventDefault();
             _formUpdateSenha(user);
           });
-          /* </> Alterar Senha */
 
-          /* </> Logou do Usuário */
-
-          /* Pupula Usuário Data */
+          /* Popula Usuário Data */
           let data = $.parseHTML(`
           <li>${user.nome}</li>
           <li>${user.nivel == 2 ? "Administrador" : "Usuario CADI"}</li>`);

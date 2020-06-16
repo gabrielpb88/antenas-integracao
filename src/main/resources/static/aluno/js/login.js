@@ -1,6 +1,7 @@
 //LOGIN NOVO, COM TOKEN
 $(document).ready(function() {
 
+    let token = localStorage.getItem('token');
     var login = document.getElementById('login'); //label de id login
     var cadastro = document.getElementById('cadastro'); //label de id cadastro
 
@@ -13,8 +14,6 @@ $(document).ready(function() {
             cadastro.style.display = "none";
         }
     }
-
-
 });
 
 
@@ -121,12 +120,8 @@ function fechaPopupCadastro(event) {
     document.getElementById('cadastro').style.display='none';    
 }
 
-
-//botão para fazer logout
-$('#sair').click(function(e){
-
+$('[data-aluno-logout]').click(function(e){
     e.preventDefault();
-
     localStorage.removeItem('token');
     sessionStorage.setItem("sess_email_aluno", '');
     location.replace('/aluno/');
