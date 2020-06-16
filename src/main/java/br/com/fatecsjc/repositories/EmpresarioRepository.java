@@ -12,7 +12,7 @@ public class EmpresarioRepository {
 	private MongoCollection<Document> collection;
 
 	public EmpresarioRepository(){
-		MongoDatabase db = Database.getConnection();
+		MongoDatabase db = Database.getDatabase();
 		collection = db.getCollection("empresario");
 	}
 

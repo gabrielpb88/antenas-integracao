@@ -17,7 +17,7 @@ public class Cadi {
 	private MongoCollection<Document> empresarios;
 
 	public Cadi(){
-		db = Database.getConnection();
+		db = Database.getDatabase();
 		cadiCollection = db.getCollection("cadi");
 		projects = db.getCollection("projeto");
 		empresarios = db.getCollection("empresario");

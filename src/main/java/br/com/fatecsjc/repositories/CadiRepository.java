@@ -13,7 +13,7 @@ public class CadiRepository {
 	private MongoCollection<Document> collection;
 
 	public CadiRepository(){
-		MongoDatabase db = Database.getConnection();
+		MongoDatabase db = Database.getDatabase();
 		collection = db.getCollection("cadi");
 	}
 

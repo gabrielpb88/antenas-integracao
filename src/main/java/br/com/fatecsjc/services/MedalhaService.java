@@ -1,8 +1,9 @@
 package br.com.fatecsjc.services;
 
+import br.com.fatecsjc.models.Medalha;
 import br.com.fatecsjc.repositories.MedalhaRepository;
 import com.mongodb.client.FindIterable;
-import org.bson.Document;
+import org.bson.types.ObjectId;
 
 public class MedalhaService {
 
@@ -12,22 +13,22 @@ public class MedalhaService {
         medalhaRepository = new MedalhaRepository();
     }
 
-    public void save(Document medalha) {
+    public void save(Medalha medalha) {
         medalhaRepository.save(medalha);
     }
 
-    public void delete(Document medalha){ medalhaRepository.delete(medalha); }
+    public void delete(Medalha medalha){ medalhaRepository.delete(medalha); }
 
-    public Document update(Document medalha) {
+    public Medalha update(Medalha medalha) {
         medalhaRepository.update(medalha);
-        return medalhaRepository.findById(medalha);
+        return medalhaRepository.findById(medalha.getId());
     }
 
-    public FindIterable<Document> findAll() {
+    public FindIterable<Medalha> findAll() {
         return medalhaRepository.findAll();
     }
 
-    public FindIterable<Document> findByCompetencia(String nome) {
+    public FindIterable<Medalha> findByCompetencia(String nome) {
         return medalhaRepository.findByCompetencia(nome);
     }
 }

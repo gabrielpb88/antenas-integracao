@@ -16,7 +16,7 @@ public class Professor {
 	private MongoCollection<Document> collection;
 
 	public Professor(){
-		db = Database.getConnection();
+		db = Database.getDatabase();
 		collection = db.getCollection("professor");
 	}
 

@@ -10,7 +10,7 @@ import org.bson.Document;
 
 public class ProfessorRepository {
 
-    private MongoDatabase db = Database.getConnection();
+    private MongoDatabase db = Database.getDatabase();
     private MongoCollection<Document> projetosCollection;
     private MongoCollection<Document> professorCollection;
 

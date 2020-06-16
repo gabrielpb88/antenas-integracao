@@ -12,7 +12,7 @@ public class AlunoRepository {
     private MongoCollection<Document> collection;
 
     public AlunoRepository() {
-        MongoDatabase db = Database.getConnection();
+        MongoDatabase db = Database.getDatabase();
         collection = db.getCollection("alunos");
     }
 

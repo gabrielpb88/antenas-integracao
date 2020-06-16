@@ -13,7 +13,7 @@ import org.bson.types.ObjectId;
 
 public class ProjetoRepository {
 
-	private MongoDatabase db = Database.getConnection();
+	private MongoDatabase db = Database.getDatabase();
 	private MongoCollection<Document> collection;
 
 	public ProjetoRepository(){

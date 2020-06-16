@@ -26,6 +26,9 @@ dependencies {
     implementation 'com.auth0:java-jwt:3.8.2'
     // https://mvnrepository.com/artifact/org.apache.commons/commons-email
     compile group: 'org.apache.commons', name: 'commons-email', version: '1.5'
+
+    compile 'org.projectlombok:lombok:1.18.12'
+    annotationProcessor 'org.projectlombok:lombok:1.18.12'
 }
 
 jar {

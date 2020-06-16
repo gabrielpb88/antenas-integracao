@@ -1,14 +1,14 @@
 package br.com.fatecsjc.controllers;
 
+import br.com.fatecsjc.models.Medalha;
 import br.com.fatecsjc.services.MedalhaService;
-import br.com.fatecsjc.utils.TextUtils;
-import org.bson.Document;
+import com.google.gson.Gson;
+import com.mongodb.client.FindIterable;
 import org.json.JSONObject;
-import spark.Request;
-import spark.Response;
-import spark.Route;
-
-import java.util.Base64;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import static spark.Spark.get;
 import static spark.Spark.post;
@@ -16,6 +16,7 @@ import static spark.Spark.post;
 public class MedalhaController {
 
     private MedalhaService medalhaService;
+    private Gson gson = new Gson();
 
     public MedalhaController(){
         medalhaService = new MedalhaService();
@@ -23,11 +24,15 @@ public class MedalhaController {
 
     public void melhadas() {
         get("/medalhas", (request, response) -> {
-            return TextUtils.converter(medalhaService.findAll());
+            List<String> medalhas = new ArrayList<>();
+            medalhaService.findAll().spliterator().forEachRemaining(medalha -> medalhas.add(gson.toJson(medalha)));
+            return medalhas;
         });
 
         get("/medalhas/:competencia", (request, response) -> {
-            return medalhaService.findByCompetencia(request.params("competencia"));
+            List<String> medalhas = new ArrayList<>();
+            medalhaService.findByCompetencia(request.params("competencia")).spliterator().forEachRemaining(medalha -> medalhas.add(gson.toJson(medalha)));
+            return medalhas;
         });
 
         post("/medalhas", (request, response) -> {
@@ -35,22 +40,26 @@ public class MedalhaController {
             String nome = body.get("nome").toString();
 
             // Daqui pra baixo é coisa do Mongo
-            Document bronze = new Document();
-            bronze.append("competencia", nome);
-            bronze.append("medalha", "Bronze");
+            Medalha bronze = new Medalha();
+            bronze.setCompetencia(nome);
+            bronze.setMedalha("Bronze");
             medalhaService.save(bronze);
 
-            Document prata = new Document();
-            prata.append("competencia", nome);
-            prata.append("medalha", "Prata");
+            Medalha prata = new Medalha();
+            prata.setCompetencia(nome);
+            prata.setMedalha("Prata");
             medalhaService.save(prata);
 
-            Document ouro = new Document();
-            ouro.append("competencia", nome);
-            ouro.append("medalha", "Ouro");
+            Medalha ouro = new Medalha();
+            ouro.setCompetencia(nome);
+            ouro.setMedalha("Ouro");
             medalhaService.save(ouro);
 
-            return TextUtils.converter(medalhaService.findByCompetencia(nome));
+            FindIterable<Medalha> iterable = medalhaService.findByCompetencia(nome);
+
+            return StreamSupport.stream(iterable.spliterator(), false).map(m -> gson.toJson(m))
+                    .collect(Collectors.toList());
+
         });
 
     }

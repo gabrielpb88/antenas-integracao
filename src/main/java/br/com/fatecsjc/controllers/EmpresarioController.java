@@ -1,8 +1,6 @@
 package br.com.fatecsjc.controllers;
 
-import br.com.fatecsjc.models.Empresario;
 import br.com.fatecsjc.services.EmpresarioService;
-import br.com.fatecsjc.services.ProjetoService;
 import br.com.fatecsjc.services.exceptions.AccessForbiddenException;
 import br.com.fatecsjc.services.exceptions.UserAlreadyExists;
 import br.com.fatecsjc.utils.Jwt;

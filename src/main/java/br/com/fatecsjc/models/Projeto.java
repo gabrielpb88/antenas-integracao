@@ -11,7 +11,7 @@ public class Projeto {
 	private MongoCollection<Document> collection;
 
 	public Projeto(){
-		db  = Database.getConnection();
+		db  = Database.getDatabase();
 		collection = db.getCollection("projeto");
 	}
 

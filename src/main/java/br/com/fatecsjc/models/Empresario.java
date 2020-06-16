@@ -15,7 +15,7 @@ public class Empresario {
 	private MongoCollection<Document> collection;
 
 	public Empresario(){
-		db = Database.getConnection();
+		db = Database.getDatabase();
 		collection = db.getCollection("empresario");
 	}
 

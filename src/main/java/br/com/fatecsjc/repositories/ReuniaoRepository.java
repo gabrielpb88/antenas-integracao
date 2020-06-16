@@ -10,7 +10,7 @@ public class ReuniaoRepository {
     private MongoCollection<Document> collection;
 
     public ReuniaoRepository(){
-        MongoDatabase db = Database.getConnection();
+        MongoDatabase db = Database.getDatabase();
         db.getCollection("reuniao");
     }
 

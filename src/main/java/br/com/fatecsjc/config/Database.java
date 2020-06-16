@@ -15,7 +15,7 @@ public class Database {
 	 * Cria uma conexão com o banco de dados e retorna um objeto MongoDatabase
 	 * @return MongoDatabase
 	 */
-	public static MongoDatabase getConnection() {
+	public static MongoDatabase getDatabase() {
 		if(db == null) {
 			mongoClient = MongoClients.create("mongodb://172.17.0.2");
 			db = mongoClient.getDatabase("projetoantenas");
