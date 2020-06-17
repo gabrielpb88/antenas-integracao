@@ -145,7 +145,6 @@ public class CadiController {
 		});
 
 		get("/searchEmpresario/:email", (request, response) -> {
-			System.out.println(model.searchEmpresario(request.params("email")).toJson());
 			return model.searchEmpresario(request.params("email")).toJson();
 		});
 

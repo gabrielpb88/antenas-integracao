@@ -33,7 +33,7 @@ public class ProfessorController {
 		service = new ProfessorService();
 	}
 
-	public void initiate(){
+	public void initiate() {
 		get("/professores", (req, res) -> {
 			return TextUtils.converter(service.findAll());
 		});
@@ -79,7 +79,7 @@ public class ProfessorController {
 			public Object handle(final Request request, final Response response) {
 				String email = new String(Base64.getDecoder().decode(request.params("email")));
 				UpdateResult found = model.ativarProfessor(email);
-				if (found.wasAcknowledged()){
+				if (found.wasAcknowledged()) {
 					response.redirect("http://localhost:8081/professor/index.html");
 				}
 				return null;
@@ -159,10 +159,9 @@ public class ProfessorController {
 
 		/* restornar meus projetos que fa�o parte */
 		get("/myprojects", (Request request, Response response) -> {
-				String email = request.queryString();
-				return TextUtils.converter(model.myProjects(new Document("email", email)));
-			}
-		);
+			String email = request.queryString();
+			return TextUtils.converter(model.myProjects(new Document("email", email)));
+		});
 
 	}
 

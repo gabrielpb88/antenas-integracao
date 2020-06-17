@@ -34,8 +34,8 @@ public class Application {
 		initializeControllers();
 		CorsFilter.apply();
 
-//		Descomente a linha abaixo para popular o banco com dados mockados
-//		mockModels();
+		// Descomente a linha abaixo para popular o banco com dados mockados
+		// mockModels();
 	}
 
 	/**

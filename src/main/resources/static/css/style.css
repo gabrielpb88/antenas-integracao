@@ -1,4 +1,7 @@
 body {
+  background-image: url(../imgs/background.jpg);
+  background-repeat: no-repeat;
+  background-size: 100%;
   font-family: 'Work Sans', sans-serif;
 }
 

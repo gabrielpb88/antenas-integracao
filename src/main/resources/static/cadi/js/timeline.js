@@ -1,6 +1,6 @@
 var Timeline = function (endpoint) {
 
-  
+
   if (!endpoint) {
     throw new Error('É preciso de um endpoint de salvamento de projeto para instanciar Timeline');
   }
@@ -59,13 +59,13 @@ var Timeline = function (endpoint) {
     $('#modal-label').text(projeto.titulo);
 
     $(modalExtra + '.modal-body').html(inputsHTML);
-    
+
     $(document).on('show.bs.modal', '.modal', function () {
-        var zIndex = 1040 + (10 * $('.modal:visible').length);
-        $(this).css('z-index', zIndex);
-        setTimeout(function() {
-            $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
-        }, 0);
+      var zIndex = 1040 + (10 * $('.modal:visible').length);
+      $(this).css('z-index', zIndex);
+      setTimeout(function () {
+        $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
+      }, 0);
     });
 
     if ([1, 3, 4].indexOf(projeto.fase) != -1) {
@@ -78,33 +78,39 @@ var Timeline = function (endpoint) {
 
       $('[aceitar-avaInit]').click(function (e) {
         if (projeto.fase === 1) {
-          $.ajax({ type: 'PUT', url: '/projetos', data: JSON.stringify({'_id':projeto._id, 'fase':2 })})
-              .done(() => location.reload());
+          $.ajax({ type: 'PUT', url: '/projetos', data: JSON.stringify({ '_id': projeto._id, 'fase': 2 }) })
+            .done(() => location.reload());
         }
-        if(projeto.fase === 3){
-          $.ajax({ type: 'PUT', url: '/projetos', data: JSON.stringify({'_id':projeto._id, 'fase':4 })})
-              .done(() => location.reload());
+        if (projeto.fase === 3) {
+          $.ajax({ type: 'PUT', url: '/projetos', data: JSON.stringify({ '_id': projeto._id, 'fase': 4 }) })
+            .done(() => location.reload());
         }
-        if(projeto.fase === 4){
-          var dataEntrega= $('#formGroupInserirEntrega').val();  
-          $.ajax({ type: 'PUT', url: '/projetos',
-            data: JSON.stringify({'_id':projeto._id, 'reuniao': {'datas-possiveis':datas}, 'dataEntrega':dataEntrega, 'responsavel-professor': $('#professor').val()})})
-              .done(() => location.reload());
+        if (projeto.fase === 4) {
+          var dataEntrega = $('#formGroupInserirEntrega').val();
+          $.ajax({
+            type: 'PUT', url: '/projetos',
+            data: JSON.stringify({ '_id': projeto._id, 'reuniao': { 'datas-possiveis': datas }, 'dataEntrega': dataEntrega, 'responsavel-professor': $('#professor').val() })
+          })
+            .done(() => location.reload());
         }
-        if (projeto.fase === 5){
-          $.ajax({ type: 'PUT', url: '/projetos',
-            data: JSON.stringify({'_id':projeto._id, 'reuniao' : {'data':dataReuniao}})})
-              .done(() => location.reload());
+        if (projeto.fase === 5) {
+          $.ajax({
+            type: 'PUT', url: '/projetos',
+            data: JSON.stringify({ '_id': projeto._id, 'reuniao': { 'data': dataReuniao } })
+          })
+            .done(() => location.reload());
         }
       });
-      
+
       $('[recusar]').click(function (e) {
-    	  	var rec = document.getElementById('recusa');
-            $.ajax({ type: 'PUT', url: '/projetos',
-              data: JSON.stringify({'_id':projeto._id, 'status' : {'negado':true, 'motivo':rec.value}})})
-                .done(() => location.reload());
-        });
-      
+        var rec = document.getElementById('recusa');
+        $.ajax({
+          type: 'PUT', url: '/projetos',
+          data: JSON.stringify({ '_id': projeto._id, 'status': { 'negado': true, 'motivo': rec.value } })
+        })
+          .done(() => location.reload());
+      });
+
     }
   }
 
@@ -129,7 +135,7 @@ var Timeline = function (endpoint) {
       else
         return '';
     }
-    
+
 
     function _getAvalInicHTML() {
       return `
@@ -379,7 +385,7 @@ var Timeline = function (endpoint) {
         title: 'Cadastro Detalhado',
         isActive: projeto.fase > 2,
         isPending: projeto.fase == 2,
-        isWaitingForInput: false //projeto.fase == 2 && (!projeto['descricao-completa'] || !projeto['descricao-tecnologias'])
+        isWaitingForInput: false
       },
       {
         icon: _getIcon(''),
@@ -393,8 +399,8 @@ var Timeline = function (endpoint) {
         title: 'Reunião',
         isActive: projeto.fase > 4,
         isPending: projeto.fase == 4 && !projeto.reuniao['datas-possiveis'].length,
-        isWaitingForInput: projeto.fase == 4 //projeto.fase == 4 && projeto.reuniao['datas-possiveis'].length
-      }, 
+        isWaitingForInput: projeto.fase == 4
+      },
       {
         icon: _getIcon(''),
         title: 'Entrega',

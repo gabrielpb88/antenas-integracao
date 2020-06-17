@@ -9,7 +9,7 @@ var Timeline = function (endpoint) {
 
   function _getInitialModalHTML(projeto) {
     return `
-      <div class="modal fade" id="modal-extra-${ projeto._id.$oid }" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+      <div class="modal fade" id="modal-extra-${ projeto._id.$oid}" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
@@ -41,12 +41,12 @@ var Timeline = function (endpoint) {
     var btn = footer.get()[0].querySelector('[data-send-changes]');
 
     if (btn)
-        btn.remove();
+      btn.remove();
 
 
     if ([2, 4].indexOf(projeto.fase) != -1) {
 
-        footer.append(`
+      footer.append(`
             <button type="button" class="btn btn-primary" data-send-changes>Enviar alterações</button>
         `);
 
@@ -54,7 +54,6 @@ var Timeline = function (endpoint) {
 
         let newProject = { ...projeto };
 
-        console.log('Fase projeto: ' , projeto.fase);
         if (projeto.fase === 2) {
 
           let descCompleta = $('[data-descricao-completa]').val();
@@ -93,9 +92,8 @@ var Timeline = function (endpoint) {
               }
             };
 
-            console.log(endpoint)
-            $.ajax({ type: 'PUT', url: endpoint, data: JSON.stringify(newProject)})
-                .done(() => location.reload());
+            $.ajax({ type: 'PUT', url: '/projetos', data: JSON.stringify(newProject) })
+              .done(() => location.reload());
           }
         }
       });
@@ -288,10 +286,10 @@ var Timeline = function (endpoint) {
       </div>
     `;
 
-    target.querySelectorAll('[data-open-to-input]').forEach(function(elemento) {
-        elemento.addEventListener('click', function (e) {
-            _setInputPopupStructure(projeto.status.negado ? 'negado' : parseInt(elemento.getAttribute('data-open-to-input')));
-        });
+    target.querySelectorAll('[data-open-to-input]').forEach(function (elemento) {
+      elemento.addEventListener('click', function (e) {
+        _setInputPopupStructure(projeto.status.negado ? 'negado' : parseInt(elemento.getAttribute('data-open-to-input')));
+      });
     });
   }
 

@@ -6,7 +6,6 @@ $(document).ready(function () {
 	let rota = "/projetos"
 
 	$.get(rota, function (projetosBE, err) {
-		
 		let projects = JSON.parse(projetosBE);
 		let wichParticipate = [];
 		for (i = 0; i < projects.length; i++) {
@@ -19,27 +18,27 @@ $(document).ready(function () {
 			wichParticipate.map((index) => {
 				var $tela = document.querySelector('#tpjr');
 				var HTMLNovo = "<tr> <th>" + projects[index].chave + "</th>"
-						+ "<th>" + projects[index].titulo + "</th>" + "<th>"
-						+ projects[index].fase + "</th>"
-						+ `<th><button onclick="abrePopupEntregar(event,chave='${projects[index].chave}')">Entregar</button></th>`
-						+ "</tr>";
+					+ "<th>" + projects[index].titulo + "</th>" + "<th>"
+					+ projects[index].fase + "</th>"
+					+ `<th><button onclick="abrePopupEntregar(event,chave='${projects[index].chave}')">Entregar</button></th>`
+					+ "</tr>";
 				$tela.innerHTML += HTMLNovo;
 			});
 		}
 
 	});
 
-	$.ajax({ type: 'GET', url: '/alunos/'+email})
+	$.ajax({ type: 'get', url: '/alunos/' + email })
 		.done((data) => {
 			const aluno = JSON.parse(data)
-			$('[data-aluno-nome]').text(` | ${ aluno.nome }`);
+			$('[data-aluno-nome]').text(` | ${aluno.nome}`);
 			const medalhas = aluno.medalhas
-			if(medalhas){
+			if (medalhas) {
 				const tabela = document.querySelector('#tmedalha')
 				medalhas.forEach(medalha => {
-					tabela.innerHTML += "<tr><td>" + medalha.nivel + "</td>"
-						+"<td>" + medalha.competencia + "</td>"
-						+"<td>" + medalha.professor + "</td></tr>"
+					tabela.innerHTML += "<tr><td>" + medalha.competencia + "</td >"
+						+ "<td>" + medalha.nivel + "</td>"
+						+ "<td>" + medalha.professor + "</td></tr>"
 				})
 			}
 		})
@@ -47,9 +46,8 @@ $(document).ready(function () {
 	$('#botao-add').click(function () {
 		let codigoProjeto = $("#codigo-projetoLabel").val();
 
-		function retornaBack (val) {
-			console.log(val)
-			if (val=='[]') {
+		function retornaBack(val) {
+			if (val == '[]') {
 				document.getElementById("erro-add").style.display = "block";
 				return false;
 			}
@@ -61,10 +59,8 @@ $(document).ready(function () {
 				if (!alunoJaEhParticipante) {
 					projeto.alunos.push(email);
 
-					$.ajax({ type: 'PUT', url: '/projetos', data: JSON.stringify(projeto)})
+					$.ajax({ type: 'PUT', url: '/projetos', data: JSON.stringify(projeto) })
 						.done((data) => {
-							console.log(data);
-
 							if (data != "false") {
 								document.getElementById("erro-add-already").style.display = "none";
 								document.getElementById("erro-add").style.display = "none";
