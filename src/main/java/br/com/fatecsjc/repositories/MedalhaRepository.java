@@ -1,7 +1,7 @@
 package br.com.fatecsjc.repositories;
 
 import br.com.fatecsjc.config.Database;
-import br.com.fatecsjc.models.Medalha;
+import br.com.fatecsjc.models.entities.Medalha;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;

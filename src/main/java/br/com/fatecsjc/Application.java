@@ -2,10 +2,10 @@ package br.com.fatecsjc;
 
 import br.com.fatecsjc.config.CorsFilter;
 import br.com.fatecsjc.controllers.*;
-import br.com.fatecsjc.models.Aluno;
-import br.com.fatecsjc.models.Cadi;
-import br.com.fatecsjc.models.Professor;
-import br.com.fatecsjc.models.Projeto;
+import br.com.fatecsjc.models.*;
+import br.com.fatecsjc.models.dao.MedalhaDao;
+import br.com.fatecsjc.models.dao.UsuarioDao;
+import br.com.fatecsjc.models.entities.*;
 import org.bson.Document;
 
 import static spark.Spark.port;
@@ -33,6 +33,68 @@ public class Application {
 
 		initializeControllers();
 		CorsFilter.apply();
+
+//		UsuarioEmpresario usuario = new UsuarioEmpresario("Fatec", "123");
+//		usuario.setAtivo(true);
+//		usuario.setEmail("empresario@email.com");
+//		usuario.setSenha("123");
+//		usuario.setTipoUsuario(TipoUsuario.EMPRESARIO);
+//		usuario.setNome("Gabriel Pereira Bastos");
+//
+//		UsuarioEmpresarioDao dao = new UsuarioEmpresarioDao();
+//		dao.salvar(usuario);
+
+//		UsuarioProfessor aluno = new UsuarioProfessor();
+//		aluno.setAtivo(true);
+//		aluno.setEmail("professor@email.com.br");
+//		aluno.setSenha("123");
+//		aluno.setTipoUsuario(TipoUsuario.PROFESSOR);
+//		aluno.setNome("Fernando Sabha");
+//
+//		Medalha medalha = new Medalha();
+//		medalha.setMedalha("Ouro");
+//		medalha.setCompetencia("Java");
+//		aluno.getMedalhas().add(medalha);
+//
+//		UsuarioDao dao = new UsuarioDao();
+//		dao2.salvar(aluno);
+
+//		Medalha medalha = new Medalha();
+//		medalha.setCompetencia("Java");
+//		medalha.setMedalha("OURO");
+//
+//		MedalhaDao dao = new MedalhaDao();
+//		dao.save(medalha);
+//		System.out.println(medalha.getId());
+//		medalha.setCompetencia("PHP");
+//		dao.update(medalha);
+//		System.out.println(medalha);
+//		System.out.println(medalha.getId());
+
+//		UsuarioProfessor professor = new UsuarioProfessor();
+//		professor.setNome("Fernando Sabha");
+//		professor.setEmail("professor@gmail.com");
+//		professor.setSenha("123");
+//		professor.setTipoUsuario(TipoUsuario.PROFESSOR);
+//		dao.save(professor);
+//
+//		Medalha medalha = new Medalha();
+//		medalha.setCompetencia("Java");
+//		medalha.setMedalha("Ouro");
+//		MedalhaDao medalhaDao = new MedalhaDao();
+//		medalhaDao.save(medalha);
+//
+//		MedalhasAtribuidas medalhasAtribuidas = new MedalhasAtribuidas();
+//		medalhasAtribuidas.setMedalha(medalha);
+//		medalhasAtribuidas.setProfessor(professor);
+//
+//		UsuarioAluno aluno = new UsuarioAluno();
+//		aluno.setNome("Gabriel");
+//		aluno.setEmail("gabrielpb88@gmail.com");
+//		aluno.setSenha("123");
+//		aluno.getMedalhas().add(medalhasAtribuidas);
+//		dao.save(aluno);
+
 
 		// Descomente a linha abaixo para popular o banco com dados mockados
 		// mockModels();

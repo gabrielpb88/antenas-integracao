@@ -12,11 +12,15 @@ if (session_login == null) {
       userData(user);
     }, "json");
 
+    criarMedalha('Ingles')
+
     $.get('/myprojects', session_login)
       .done(function (projetos) {
         projects = JSON.parse(projetos);
         insertMyProjects(projects);
       });
+
+    consultarMedalhas()
 
     function insertMyProjects(projecs) {
 
@@ -136,6 +140,15 @@ function userData(user) {
   navPROF.append(updateSenha);
   navPROF.append(logout);
   $("li").addClass("list-inline-item");
+}
+
+function criarMedalha(competencia) {
+  $.ajax({ type: 'post', url: '/medalhas', data:JSON.stringify({ 'nome': competencia }) })
+}
+
+async function consultarMedalhas() {
+  const medalhas = await $.ajax({ type: 'get', url: '/medalhas'})
+  return JSON.parse(medalhas)
 }
 
 function _AlunosPresentes(project) {

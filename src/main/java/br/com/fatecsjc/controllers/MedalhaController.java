@@ -1,6 +1,6 @@
 package br.com.fatecsjc.controllers;
 
-import br.com.fatecsjc.models.Medalha;
+import br.com.fatecsjc.models.entities.Medalha;
 import br.com.fatecsjc.services.MedalhaService;
 import com.google.gson.Gson;
 import com.mongodb.client.FindIterable;

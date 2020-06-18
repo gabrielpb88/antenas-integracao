@@ -1,9 +1,12 @@
-package br.com.fatecsjc.models;
+package br.com.fatecsjc.models.dao;
 
 import br.com.fatecsjc.config.Database;
+import br.com.fatecsjc.models.entities.Usuario;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Indexes;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 
@@ -21,10 +24,13 @@ public class UsuarioDao {
                         MongoClientSettings.getDefaultCodecRegistry(),
                         fromProviders(PojoCodecProvider.builder().automatic(true).build()));
 
-        collection = db.getCollection("usuarios", Usuario.class).withCodecRegistry(pojoCodecRegistry);
+        collection = db.getCollection("usuarios", Usuario.class)
+                .withCodecRegistry(pojoCodecRegistry);
     }
 
-    public void salvar(Usuario usuario){
+    public void save(Usuario usuario){
         collection.insertOne(usuario);
     }
+
+    public Usuario findByEmail(String email){ return collection.find(Filters.eq("email", email)).first(); }
 }

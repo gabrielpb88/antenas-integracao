@@ -1,4 +1,4 @@
-package br.com.fatecsjc.models;
+package br.com.fatecsjc.models.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;

@@ -1,5 +1,6 @@
-package br.com.fatecsjc.models;
+package br.com.fatecsjc.models.entities;
 
+import br.com.fatecsjc.models.TipoUsuario;
 import lombok.Data;
 import org.bson.types.ObjectId;
 
@@ -11,5 +12,6 @@ public abstract class Usuario {
     protected String nome;
     protected String email;
     protected String senha;
+    protected Boolean ativo;
 
 }

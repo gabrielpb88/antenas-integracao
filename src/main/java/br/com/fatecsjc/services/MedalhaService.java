@@ -1,9 +1,8 @@
 package br.com.fatecsjc.services;
 
-import br.com.fatecsjc.models.Medalha;
+import br.com.fatecsjc.models.entities.Medalha;
 import br.com.fatecsjc.repositories.MedalhaRepository;
 import com.mongodb.client.FindIterable;
-import org.bson.types.ObjectId;
 
 public class MedalhaService {
 
