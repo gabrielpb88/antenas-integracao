@@ -12,15 +12,20 @@ if (session_login == null) {
       userData(user);
     }, "json");
 
-    criarMedalha('Ingles')
+    $('[data-save-compentency]').click(e => {
+      const compentencia = $("#competencia").val()
+      criarMedalha(compentencia)
+      location.reload()
+    })
+
+
+    listarMedalhas()
 
     $.get('/myprojects', session_login)
       .done(function (projetos) {
         projects = JSON.parse(projetos);
         insertMyProjects(projects);
       });
-
-    consultarMedalhas()
 
     function insertMyProjects(projecs) {
 
@@ -143,12 +148,19 @@ function userData(user) {
 }
 
 function criarMedalha(competencia) {
-  $.ajax({ type: 'post', url: '/medalhas', data:JSON.stringify({ 'nome': competencia }) })
+  $.ajax({ type: 'post', url: '/medalhas', data: JSON.stringify({ 'nome': competencia }) })
 }
 
-async function consultarMedalhas() {
-  const medalhas = await $.ajax({ type: 'get', url: '/medalhas'})
-  return JSON.parse(medalhas)
+function listarMedalhas() {
+  $.ajax({ type: 'get', url: '/medalhas' })
+    .done(data => {
+      const select = $('#medalhas')
+      const medalhas = JSON.parse(data)
+      medalhas.forEach(medalha => {
+        const m = `<option value=${medalha.id}>${medalha.competencia} - ${medalha.medalha}</option>`
+        select.append(m)
+      })
+    })
 }
 
 function _AlunosPresentes(project) {
