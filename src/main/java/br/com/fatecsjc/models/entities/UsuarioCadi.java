@@ -1,8 +1,9 @@
 package br.com.fatecsjc.models.entities;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter @Setter
 public class UsuarioCadi extends Usuario {
 
     private Integer nivel;

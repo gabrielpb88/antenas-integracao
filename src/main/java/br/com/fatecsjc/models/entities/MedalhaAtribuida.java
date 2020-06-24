@@ -5,10 +5,10 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class MedalhasAtribuidas {
+public class MedalhaAtribuida {
 
     private Medalha medalha;
-    private UsuarioProfessor professor;
+    private String professor;
     private Date dataAtribuicao = new Date();
 
 }

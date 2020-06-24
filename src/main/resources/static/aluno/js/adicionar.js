@@ -35,10 +35,11 @@ $(document).ready(function () {
 			const medalhas = aluno.medalhas
 			if (medalhas) {
 				const tabela = document.querySelector('#tmedalha')
-				medalhas.forEach(medalha => {
-					tabela.innerHTML += "<tr><td>" + medalha.competencia + "</td >"
-						+ "<td>" + medalha.nivel + "</td>"
-						+ "<td>" + medalha.professor + "</td></tr>"
+				console.log(medalhas)
+				medalhas.forEach(m => {
+					tabela.innerHTML += "<tr><td>" + m.medalha.competencia + "</td >"
+						+ "<td>" + m.medalha.medalha + "</td>"
+						+ "<td>" + m.professor + "</td></tr>"
 				})
 			}
 		})

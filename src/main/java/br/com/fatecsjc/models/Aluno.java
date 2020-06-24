@@ -1,6 +1,12 @@
 package br.com.fatecsjc.models;
 
 import br.com.fatecsjc.config.Database;
+import br.com.fatecsjc.models.dao.MedalhaDao;
+import br.com.fatecsjc.models.dao.UsuarioDao;
+import br.com.fatecsjc.models.entities.Medalha;
+import br.com.fatecsjc.models.entities.MedalhaAtribuida;
+import br.com.fatecsjc.models.entities.UsuarioAluno;
+import br.com.fatecsjc.models.entities.UsuarioProfessor;
 import br.com.fatecsjc.utils.TextUtils;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoCollection;
@@ -14,11 +20,25 @@ public class Aluno {
 	private MongoDatabase db;
 	private MongoCollection<Document> alunos;
 	private MongoCollection<Document> projects;
+	private UsuarioDao professorDao = new UsuarioDao(UsuarioProfessor.class);
+	private UsuarioDao alunoDao = new UsuarioDao(UsuarioAluno.class);
+	private MedalhaDao medalhaDao = new MedalhaDao();
 
 	public Aluno(){
 		db = Database.getDatabase();
 		alunos = db.getCollection("alunos");
 		projects = db.getCollection("projeto");
+	}
+
+	public void atribuirMedalha(String emailAluno, String emailProfessor, Medalha medalha){
+		UsuarioAluno aluno = (UsuarioAluno) alunoDao.findByEmail(emailAluno);
+
+		MedalhaAtribuida medalhasAtribuida = new MedalhaAtribuida();
+		medalhasAtribuida.setMedalha(medalhaDao.findById(medalha.getId()));
+		medalhasAtribuida.setProfessor(emailProfessor);
+
+		aluno.getMedalhas().add(medalhasAtribuida);
+		alunoDao.update(aluno);
 	}
 
 	public String search(String chave) {

@@ -9,6 +9,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
+import org.bson.types.ObjectId;
 
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
@@ -25,6 +26,10 @@ public class MedalhaDao {
                         fromProviders(PojoCodecProvider.builder().automatic(true).build()));
 
         collection = db.getCollection("medalhas", Medalha.class).withCodecRegistry(pojoCodecRegistry);
+    }
+
+    public Medalha findById(ObjectId id){
+        return collection.find(Filters.eq("_id", id)).first();
     }
 
     public void save(Medalha medalha){

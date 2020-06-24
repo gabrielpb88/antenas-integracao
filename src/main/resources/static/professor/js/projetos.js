@@ -3,110 +3,112 @@ var session_login = sessionStorage.getItem("sess_email_professor");
 
 if (session_login == null) {
   window.location.href = 'index.html';
-} else {
+}
 
-  $(document).ready(function () {
-    let projects;
+$(document).ready(async function () {
+  let projects;
 
-    $.post("/professorLogado", JSON.stringify({ 'email': session_login }), function (user) {
-      userData(user);
-    }, "json");
+  $.post("/professorLogado", JSON.stringify({ 'email': session_login }), function (user) {
+    userData(user);
+  }, "json");
 
-    $('[data-save-compentency]').click(e => {
-      const compentencia = $("#competencia").val()
-      criarMedalha(compentencia)
-      location.reload()
-    })
+  $('[data-save-compentency]').click(e => {
+    const compentencia = $("#competencia").val()
+    criarMedalha(compentencia)
+    location.reload()
+  })
 
+  // const aluno = await $.ajax({ type: 'get', url: '/alunos/' + email })
 
-    listarMedalhas()
+  // $.ajax({ type: 'put', url: '/aluno', data: aluno })
 
-    $.get('/myprojects', session_login)
-      .done(function (projetos) {
-        projects = JSON.parse(projetos);
-        insertMyProjects(projects);
-      });
+  listarMedalhas()
 
-    function insertMyProjects(projecs) {
+  $.get('/myprojects', session_login)
+    .done(function (projetos) {
+      projects = JSON.parse(projetos);
+      insertMyProjects(projects);
+    });
 
-      let tbody = $('#tabela-projetos');
+  function insertMyProjects(projecs) {
 
-      projecs.forEach(project => {
-        let project_id = project._id.$oid;
-        let tr2 = $.parseHTML(`<tr data-project-item="${project._id}> 
-            <th scope="row">${ project.titulo}</th>
-                <td>${ project.titulo}</td>
-                <td>${ project['descricao-breve']}</td>
-                <td>Nome da Empresa</td>
-                <td id="td-key">${project['chave'] != null ? project['chave'] : '<input type="text" class="form-control" id="keyAlId-' + project_id + '" name="key_al" placeholder="Inserir Chave">'}<td>
-                <td id="td-alkey-${project_id}"></td>
-                <td id="td-alunos-${project_id}"></td>
-            </tr>
-          `);
+    let tbody = $('#tabela-projetos');
 
-        tbody.append(tr2);
+    projecs.forEach(project => {
+      let project_id = project._id.$oid;
+      let tr2 = $.parseHTML(`<tr data-project-item="${project._id}> 
+          <th scope="row">${ project.titulo}</th>
+              <td>${ project.titulo}</td>
+              <td>${ project['descricao-breve']}</td>
+              <td>Nome da Empresa</td>
+              <td id="td-key">${project['chave'] != null ? project['chave'] : '<input type="text" class="form-control" id="keyAlId-' + project_id + '" name="key_al" placeholder="Inserir Chave">'}<td>
+              <td id="td-alkey-${project_id}"></td>
+              <td id="td-alunos-${project_id}"></td>
+          </tr>
+        `);
 
-        /*Gerando Chave de Acesso do Aluno td-alkey */
-        let generateKey = $.parseHTML(`<button type="button" class="btn btn-primary">
-              Gerar Chave
-          </button>
-          </li>`);
+      tbody.append(tr2);
 
-        let removeKey = $.parseHTML(`<button type="button" class="btn btn-danger">
-              Remover Chave
-          </button>
-          </li>`);
+      /*Gerando Chave de Acesso do Aluno td-alkey */
+      let generateKey = $.parseHTML(`<button type="button" class="btn btn-primary">
+            Gerar Chave
+        </button>
+        </li>`);
 
-        if (project['chave'] == null) {
-          let $generateKey = $(generateKey);
-          $generateKey.click(function (e) {
-            e.preventDefault();
-            var myKey = $('#keyAlId-' + project_id).val();
+      let removeKey = $.parseHTML(`<button type="button" class="btn btn-danger">
+            Remover Chave
+        </button>
+        </li>`);
 
-            if (confirm('Deseja realmente alterar o chave dos alunos ?')) {
-              $.post("/updateProjetoProfessor", JSON.stringify({ '_id': project._id, 'chave': myKey }), "json");
-              location.reload();
-            }
-          });
-
-          $('#td-alkey-' + project_id).append(generateKey);
-          /* </ >Gerando Chave de Acesso do Aluno td-alkey </ >*/
-        }
-        else {
-          let $removeKey = $(removeKey);
-          $removeKey.click(function (e) {
-            e.preventDefault();
-            var myKey = null;
-            if (confirm('Deseja realmente alterar o chave dos alunos ?')) {
-              $.post("/updateProjetoProfessor", JSON.stringify({ '_id': project._id, 'chave': myKey }), "json");
-              location.reload();
-            }
-          });
-
-          $('#td-alkey-' + project_id).append(removeKey);
-
-        }
-
-        /*Gerenciar alunos presentes td-alunos*/
-        let AlPresentes = $.parseHTML(`
-          <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-alunos-presentes">
-             Alunos Presentes
-          </button>`);
-
-        let $AlPresentes = $(AlPresentes);
-
-        $AlPresentes.click(function (e) {
+      if (project['chave'] == null) {
+        let $generateKey = $(generateKey);
+        $generateKey.click(function (e) {
           e.preventDefault();
-          _AlunosPresentes(project);
+          var myKey = $('#keyAlId-' + project_id).val();
+
+          if (confirm('Deseja realmente alterar o chave dos alunos ?')) {
+            $.post("/updateProjetoProfessor", JSON.stringify({ '_id': project._id, 'chave': myKey }), "json");
+            location.reload();
+          }
         });
 
-        $('#td-alunos-' + project_id).append(AlPresentes);
-        /*</ >Gerenciar alunos presentes td-alunos</ >*/
-      });
-    }
-  });
+        $('#td-alkey-' + project_id).append(generateKey);
+        /* </ >Gerando Chave de Acesso do Aluno td-alkey </ >*/
+      }
+      else {
+        let $removeKey = $(removeKey);
+        $removeKey.click(function (e) {
+          e.preventDefault();
+          var myKey = null;
+          if (confirm('Deseja realmente alterar o chave dos alunos ?')) {
+            $.post("/updateProjetoProfessor", JSON.stringify({ '_id': project._id, 'chave': myKey }), "json");
+            location.reload();
+          }
+        });
 
-}
+        $('#td-alkey-' + project_id).append(removeKey);
+
+      }
+
+      /*Gerenciar alunos presentes td-alunos*/
+      let AlPresentes = $.parseHTML(`
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-alunos-presentes">
+           Alunos Presentes
+        </button>`);
+
+      let $AlPresentes = $(AlPresentes);
+
+      $AlPresentes.click(function (e) {
+        e.preventDefault();
+        _AlunosPresentes(project);
+      });
+
+      $('#td-alunos-' + project_id).append(AlPresentes);
+      /*</ >Gerenciar alunos presentes td-alunos</ >*/
+    });
+  }
+})
+
 
 function userData(user) {
   /* <> Logou do Usuário */
@@ -157,7 +159,7 @@ function listarMedalhas() {
       const select = $('#medalhas')
       const medalhas = JSON.parse(data)
       medalhas.forEach(medalha => {
-        const m = `<option value=${medalha.id}>${medalha.competencia} - ${medalha.medalha}</option>`
+        const m = `<option value=${medalha.id._id }>${medalha.competencia} - ${medalha.medalha}</option>`
         select.append(m)
       })
     })
@@ -165,20 +167,52 @@ function listarMedalhas() {
 
 function _AlunosPresentes(project) {
 
+  function atribuirMedalha(aluno, medalha){
+    const req = {
+      email: aluno,
+      professor: session_login,
+      medalha
+    }
+    $.ajax({ type: 'post', url: '/aluno/medalha', data: JSON.stringify(req) }).done(() => {
+      alert(`Medalha atribuída ao aluno ${aluno}`)
+      location.reload();
+    })
+  }
+
   const alunos = project.alunos
-  let listaDeAlunos = alunos.map((aluno, index) => `<tr>
+  let listaDeAlunos = alunos.map((aluno, index) => `<tr aluno>
     <td></td>
     <td>${aluno}</td>
-    <td><button class="btn btn-success">+</button></td>
-  </tr>`)
+    <td><select medalhas id="select-${index}" class="form-control"><option>Selecione uma medalha</option></select</td>
+    <td><button id="atribuir-medalha-${index}" class="btn btn-success">+</button></td></tr>`
+  )
+
+  $.ajax({ type: 'get', url: '/medalhas' })
+      .done(data => {
+        const select = $('[medalhas]')
+        const medalhas = JSON.parse(data)
+        medalhas.forEach(medalha => {
+          const m = `<option value=${JSON.stringify(medalha.id)}>${medalha.competencia} - ${medalha.medalha}</option>`
+          select.append(m)
+        })
+      })
+
+
   /* Evento insere modal no HTML */
   const tbody = document.querySelector("#tbody-alunos")
   tbody.innerHTML += listaDeAlunos
+
+  alunos.forEach((aluno, index) => {
+    $(`#atribuir-medalha-${index}`).click((e) => {
+      const medalha = $(`#select-${index} :selected`).val()
+      atribuirMedalha(aluno, medalha)
+    })
+  })
+
   /* Evento Remove modal do HTML */
   $('#modal-alunos-presentes').on('hidden.bs.modal', function (e) {
     tbody.innerHTML = ""
   })
-
 
   project.alunos.forEach(aluno => {
     let remover = project.alunos.indexOf(aluno)

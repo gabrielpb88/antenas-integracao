@@ -2,10 +2,17 @@ package br.com.fatecsjc.controllers;
 
 import br.com.fatecsjc.models.Aluno;
 import br.com.fatecsjc.models.Projeto;
+import br.com.fatecsjc.models.dao.UsuarioDao;
+import br.com.fatecsjc.models.entities.Medalha;
+import br.com.fatecsjc.models.entities.Usuario;
+import br.com.fatecsjc.models.entities.UsuarioAluno;
 import br.com.fatecsjc.services.AlunoService;
 import br.com.fatecsjc.utils.EmailService;
 import br.com.fatecsjc.utils.Jwt;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 import org.json.JSONException;
 import org.json.JSONObject;
 import spark.Request;
@@ -14,39 +21,45 @@ import spark.Route;
 
 import java.util.Base64;
 
+import com.google.gson.Gson;
+
 import static spark.Spark.*;
 
 public class AlunoController {
 
 	private Aluno alunoModel;
+	private UsuarioDao usuarioDao;
 	private Projeto projeto;
 	private AlunoService alunoService;
+	private Gson gson;
 
 	public AlunoController(Aluno model) {
 		this.alunoModel = model;
+		this.usuarioDao = new UsuarioDao(UsuarioAluno.class);
 		this.projeto = new Projeto();
 		this.alunoService = new AlunoService();
+		this.gson = new Gson();
 	}
 
 	public void loginAluno() {
 		post("/aluno/auth", (Request req, Response res) -> {
-				try {
-					JSONObject body = new JSONObject(req.body());
-					Jwt geradorJwt = new Jwt();
+			try {
+				JSONObject body = new JSONObject(req.body());
+				Jwt geradorJwt = new Jwt();
 
-					Document aluno = alunoService.login(body.getString("email"), body.getString("senha"));
+				Document aluno = alunoService.login(body.getString("email"), body.getString("senha"));
 
-					if(aluno != null && aluno.getBoolean("ativo")){
-						res.status(200);
-						return geradorJwt.GenerateJwt(body.getString("email"));
-					} else {
-						res.status(403);
-						return null;
-					}
-				} catch (JSONException ex) {
-					return "erro 500 " + ex;
+				if (aluno != null && aluno.getBoolean("ativo")) {
+					res.status(200);
+					return geradorJwt.GenerateJwt(body.getString("email"));
+				} else {
+					res.status(403);
+					return null;
 				}
-			});
+			} catch (JSONException ex) {
+				return "erro 500 " + ex;
+			}
+		});
 	}
 
 	public void validaAluno() { // Verifica se o usuário está autenticado
@@ -129,10 +142,20 @@ public class AlunoController {
 		});
 	}
 
-	public void atribuirMedalha(){
-		put("/aluno", (Request request, Response response) -> {
-			Document body = Document.parse(request.body());
-			return alunoModel.updateAluno(body);
+	public void atribuirMedalha() {
+		post("/aluno/medalha", (Request request, Response response) -> {
+
+			JSONObject body = new JSONObject(request.body());
+
+			String email = body.get("email").toString();
+			String professor = body.get("professor").toString();
+			String medalhaString = gson.toJson(body.get("medalha")).replace("\\", "");
+			String trimmed = medalhaString.substring(1, medalhaString.length()-1);
+			String medalhaTrimmed = "{\"id\":"+ trimmed +"}";
+			Medalha medalha = gson.fromJson(medalhaTrimmed, Medalha.class);
+
+			alunoModel.atribuirMedalha(email, professor, medalha);
+			return true;
 		});
 	}
 
@@ -148,6 +171,15 @@ public class AlunoController {
 					Document emailJaExiste = alunoModel.findByEmail(dadosAluno.getString("email"));
 
 					if (emailJaExiste == null || emailJaExiste.isEmpty()) {
+
+						UsuarioAluno usuarioAluno = new UsuarioAluno();
+						usuarioAluno.setNome(dadosAluno.getString("nome"));
+						usuarioAluno.setSenha(dadosAluno.getString("senha"));
+						usuarioAluno.setEmail(dadosAluno.getString("email"));
+						usuarioAluno.setAtivo(true); //deve ser alterado para false antes de mandar para produção
+						UsuarioDao dao = new UsuarioDao(UsuarioAluno.class);
+						dao.save(usuarioAluno);
+
 						alunoModel.salvar(dadosAluno);
 						new EmailService(dadosAluno).sendSimpleEmail("Antenas - Sua confirma��o de conta",
 								"Por favor, para confirmar sua conta, clique no link:", "aluno");
@@ -173,7 +205,8 @@ public class AlunoController {
 		});
 
 		get("/alunos/:email", (req, res) -> {
-			return alunoService.findByEmail(req.params(":email")).toJson();
+			UsuarioAluno usu = usuarioDao.findByEmail(req.params(":email"));
+			return gson.toJson(usu);
 		});
 
 		get("/semdono", (request, response) -> {
