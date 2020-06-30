@@ -20,7 +20,7 @@ public class UsuarioDao {
     private MongoCollection<UsuarioAluno> collection;
     private MongoDatabase db = Database.getDatabase();
 
-    public UsuarioDao(Class usuario) {
+    public UsuarioDao() {
         CodecRegistry pojoCodecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
                 fromProviders(PojoCodecProvider.builder().automatic(true).build()));
 

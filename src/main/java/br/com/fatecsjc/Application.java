@@ -121,7 +121,6 @@ public class Application {
 
 		// validacao alunos
 		controller.validaAluno();
-		controller.loginAluno();
 	}
 
 	/**

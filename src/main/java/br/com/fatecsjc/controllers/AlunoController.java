@@ -6,13 +6,10 @@ import br.com.fatecsjc.models.dao.UsuarioDao;
 import br.com.fatecsjc.models.entities.Medalha;
 import br.com.fatecsjc.models.entities.Usuario;
 import br.com.fatecsjc.models.entities.UsuarioAluno;
-import br.com.fatecsjc.services.AlunoService;
 import br.com.fatecsjc.utils.EmailService;
 import br.com.fatecsjc.utils.Jwt;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.gson.Gson;
 import org.bson.Document;
-import org.bson.types.ObjectId;
 import org.json.JSONException;
 import org.json.JSONObject;
 import spark.Request;
@@ -21,8 +18,6 @@ import spark.Route;
 
 import java.util.Base64;
 
-import com.google.gson.Gson;
-
 import static spark.Spark.*;
 
 public class AlunoController {
@@ -30,36 +25,13 @@ public class AlunoController {
 	private Aluno alunoModel;
 	private UsuarioDao usuarioDao;
 	private Projeto projeto;
-	private AlunoService alunoService;
 	private Gson gson;
 
 	public AlunoController(Aluno model) {
 		this.alunoModel = model;
-		this.usuarioDao = new UsuarioDao(UsuarioAluno.class);
+		this.usuarioDao = new UsuarioDao();
 		this.projeto = new Projeto();
-		this.alunoService = new AlunoService();
 		this.gson = new Gson();
-	}
-
-	public void loginAluno() {
-		post("/aluno/auth", (Request req, Response res) -> {
-			try {
-				JSONObject body = new JSONObject(req.body());
-				Jwt geradorJwt = new Jwt();
-
-				Document aluno = alunoService.login(body.getString("email"), body.getString("senha"));
-
-				if (aluno != null && aluno.getBoolean("ativo")) {
-					res.status(200);
-					return geradorJwt.GenerateJwt(body.getString("email"));
-				} else {
-					res.status(403);
-					return null;
-				}
-			} catch (JSONException ex) {
-				return "erro 500 " + ex;
-			}
-		});
 	}
 
 	public void validaAluno() { // Verifica se o usuário está autenticado
@@ -176,9 +148,8 @@ public class AlunoController {
 						usuarioAluno.setNome(dadosAluno.getString("nome"));
 						usuarioAluno.setSenha(dadosAluno.getString("senha"));
 						usuarioAluno.setEmail(dadosAluno.getString("email"));
-						usuarioAluno.setAtivo(true); //deve ser alterado para false antes de mandar para produção
-						UsuarioDao dao = new UsuarioDao(UsuarioAluno.class);
-						dao.save(usuarioAluno);
+						usuarioAluno.setAtivo(false); //deve ser alterado para false antes de mandar para produção
+						usuarioDao.save(usuarioAluno);
 
 						alunoModel.salvar(dadosAluno);
 						new EmailService(dadosAluno).sendSimpleEmail("Antenas - Sua confirma��o de conta",

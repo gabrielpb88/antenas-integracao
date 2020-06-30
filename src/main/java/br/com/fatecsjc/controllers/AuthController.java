@@ -1,26 +1,16 @@
 package br.com.fatecsjc.controllers;
 
-import br.com.fatecsjc.models.Aluno;
-import br.com.fatecsjc.models.Projeto;
 import br.com.fatecsjc.models.dao.UsuarioDao;
 import br.com.fatecsjc.models.entities.Usuario;
-import br.com.fatecsjc.models.entities.UsuarioAluno;
-import br.com.fatecsjc.models.entities.UsuarioProfessor;
-import br.com.fatecsjc.services.AlunoService;
-import br.com.fatecsjc.utils.EmailService;
 import br.com.fatecsjc.utils.Jwt;
-import org.bson.Document;
+import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 import spark.Request;
 import spark.Response;
-import spark.Route;
 
-import java.util.Base64;
-
-import com.google.gson.Gson;
-
-import static spark.Spark.*;
+import static spark.Spark.get;
+import static spark.Spark.post;
 
 public class AuthController {
 
@@ -28,7 +18,7 @@ public class AuthController {
     private Gson gson;
 
     public AuthController() {
-        this.usuarioDao = new UsuarioDao(Usuario.class);
+        this.usuarioDao = new UsuarioDao();
         this.gson = new Gson();
     }
 
@@ -42,58 +32,31 @@ public class AuthController {
             try {
                 JSONObject body = new JSONObject(req.body());
                 Jwt geradorJwt = new Jwt();
-                Usuario usuario = usuarioDao.findByEmail(body.getString("email"));
-                System.out.println(usuario);
 
-                // Document usuario = alunoService.login(body.getString("email"),
-                // body.getString("senha"));
+                Usuario aluno = usuarioDao.findByEmail(body.getString("email"));
 
-                // if (usuario != null && usuario.getBoolean("ativo")) {
-                // res.status(200);
-                // return geradorJwt.GenerateJwt(body.getString("email"));
-                // } else {
-                // res.status(403);
-                // return null;
-                // }
-                return "rodou";
+                if(aluno == null){
+                    res.status(400);
+                    return "Aluno não encontrado";
+                }
+
+                if(!aluno.getSenha().equals(body.getString("senha"))){
+                    res.status(400);
+                    return "Senha incorreta";
+                }
+
+                if (aluno.getAtivo()) {
+                    res.status(200);
+                    return geradorJwt.GenerateJwt(aluno.getEmail());
+                }
+
+                res.status(403);
+                return null;
+
             } catch (JSONException ex) {
                 return "erro 500 " + ex;
             }
         });
     }
 
-    // public void validaAluno() { // Verifica se o usuário está autenticado
-    // post("/valida-aluno", new Route() {
-    // @Override
-    // public Object handle(final Request request, final Response response) {
-
-    // try {
-    // // setting
-    // JSONObject myjson = new JSONObject(request.body());
-    // Jwt AuthEngine = new Jwt();
-
-    // // try to find user
-    // String emailOrNull = AuthEngine.verifyJwt((myjson.getString("token")));
-    // if (emailOrNull == null) {
-    // response.status(404);
-    // return false;
-    // } else {
-
-    // Document aluno = alunoModel.findByEmail(emailOrNull);
-
-    // if (aluno == null) {
-    // response.status(404);
-    // return false;
-    // }
-
-    // response.status(200);
-    // return aluno.toJson();
-    // }
-
-    // } catch (JSONException ex) {
-    // return false;
-    // }
-    // }
-    // });
-    // }
 }

@@ -1,11 +1,10 @@
 package br.com.fatecsjc.controllers;
 
 import br.com.fatecsjc.models.Cadi;
-import br.com.fatecsjc.services.CadiService;
 import br.com.fatecsjc.services.ProfessorService;
 import br.com.fatecsjc.services.ProjetoService;
-import br.com.fatecsjc.utils.Jwt;
 import br.com.fatecsjc.utils.EmailService;
+import br.com.fatecsjc.utils.Jwt;
 import br.com.fatecsjc.utils.TextUtils;
 import org.bson.Document;
 import org.json.JSONException;
@@ -22,14 +21,12 @@ import static spark.Spark.post;
 public class CadiController {
 
 	private Cadi model;
-	private CadiService service;
 	private ProjetoService projetoService;
 	private ProfessorService professorService;
 
 	public CadiController(Cadi model) {
 		super();
 		this.model = model;
-		this.service = new CadiService();
 		this.projetoService = new ProjetoService();
 		this.professorService = new ProfessorService();
 	}

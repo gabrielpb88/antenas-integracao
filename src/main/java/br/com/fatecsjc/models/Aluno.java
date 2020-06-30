@@ -20,8 +20,7 @@ public class Aluno {
 	private MongoDatabase db;
 	private MongoCollection<Document> alunos;
 	private MongoCollection<Document> projects;
-	private UsuarioDao professorDao = new UsuarioDao(UsuarioProfessor.class);
-	private UsuarioDao alunoDao = new UsuarioDao(UsuarioAluno.class);
+	private UsuarioDao alunoDao = new UsuarioDao();
 	private MedalhaDao medalhaDao = new MedalhaDao();
 
 	public Aluno(){
@@ -64,10 +63,6 @@ public class Aluno {
 
 	public void salvar(Document novoAluno) {
 		alunos.insertOne(novoAluno);
-	}
-
-	public Document login(String email, String senha) {
-		return alunos.find(new Document("email", email).append("senha", senha)).first();
 	}
 
 	public UpdateResult updateAluno(Document aluno) {
