@@ -1,5 +1,6 @@
 package br.com.fatecsjc.controllers;
 
+import br.com.fatecsjc.models.TipoUsuario;
 import br.com.fatecsjc.models.dao.UsuarioDao;
 import br.com.fatecsjc.models.entities.Usuario;
 import br.com.fatecsjc.utils.Jwt;
@@ -33,21 +34,24 @@ public class AuthController {
                 JSONObject body = new JSONObject(req.body());
                 Jwt geradorJwt = new Jwt();
 
-                Usuario aluno = usuarioDao.findByEmail(body.getString("email"));
+                Usuario usuario = usuarioDao.findByEmail(body.getString("email"));
 
-                if(aluno == null){
+                if(usuario == null){
                     res.status(400);
-                    return "Aluno não encontrado";
+                    return "Usuário não encontrado";
                 }
 
-                if(!aluno.getSenha().equals(body.getString("senha"))){
+                if(!usuario.getSenha().equals(body.getString("senha"))){
                     res.status(400);
                     return "Senha incorreta";
                 }
 
-                if (aluno.getAtivo()) {
+                if (usuario.getAtivo()) {
                     res.status(200);
-                    return geradorJwt.GenerateJwt(aluno.getEmail());
+                    if(usuario.getTipoUsuario() == TipoUsuario.CADI){
+                        return gson.toJsonTree(usuario);
+                    }
+                    return geradorJwt.GenerateJwt(usuario.getEmail());
                 }
 
                 res.status(403);

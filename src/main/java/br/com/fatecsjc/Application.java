@@ -75,7 +75,6 @@ public class Application {
 		CadiController controller = new CadiController(cadiModel);
 		controller.inserirCADI();
 		controller.search();
-		controller.loginCadi();
 		controller.atribuirProjeto();
 		controller.inserirReuniao();
 		controller.Auth();

@@ -1,6 +1,9 @@
 package br.com.fatecsjc.controllers;
 
 import br.com.fatecsjc.models.Cadi;
+import br.com.fatecsjc.models.dao.UsuarioCadiDao;
+import br.com.fatecsjc.models.dao.UsuarioDao;
+import br.com.fatecsjc.models.entities.UsuarioCadi;
 import br.com.fatecsjc.services.ProfessorService;
 import br.com.fatecsjc.services.ProjetoService;
 import br.com.fatecsjc.utils.EmailService;
@@ -23,6 +26,7 @@ public class CadiController {
 	private Cadi model;
 	private ProjetoService projetoService;
 	private ProfessorService professorService;
+	private UsuarioCadiDao usuarioDao = new UsuarioCadiDao();
 
 	public CadiController(Cadi model) {
 		super();
@@ -62,6 +66,7 @@ public class CadiController {
 		});
 	}
 
+	// TODO: corrigir rota para ativação do usuario
 	public void ativarUsuario() { // chamado quando o usuario recebe o link de ativacao no email
 		get("/active/cadi/:email", new Route() {
 			@Override
@@ -72,27 +77,6 @@ public class CadiController {
 					response.redirect("http://localhost:8081/cadi/index.html");
 				}
 				return null;
-			}
-		});
-	}
-
-	public void loginCadi() {
-		post("/cadi", new Route() {
-			@Override
-			public Object handle(Request request, Response response) throws Exception {
-				JSONObject json = new JSONObject(request.body());
-				String email = json.getString("email");
-				String senha = json.getString("senha");
-				try {
-					Document cadi = model.login(email, senha);
-
-					if ((Boolean) cadi.get("ativo") == true) {
-						return cadi.toJson();
-					}
-					return null;
-				} catch (NullPointerException e) {
-					return null;
-				}
 			}
 		});
 	}
@@ -111,10 +95,21 @@ public class CadiController {
 			public Object handle(final Request request, final Response response) {
 				try {
 					String jsonString = request.body();
+					JSONObject body = new JSONObject(request.body());
+
 					Document userData = Document.parse(jsonString);
 					userData.append("ativo", false);
 					Document found = model.searchByEmail(userData.getString("email"));
 					if (found == null || found.isEmpty()) {
+
+						UsuarioCadi usuarioCadi = new UsuarioCadi();
+						usuarioCadi.setNome(body.getString("nome"));
+						usuarioCadi.setSenha(body.getString("senha"));
+						usuarioCadi.setEmail(body.getString("email"));
+						usuarioCadi.setNivel(1);
+						usuarioCadi.setAtivo(false);
+						usuarioDao.save(usuarioCadi);
+
 						model.addCADI(userData);
 						new EmailService(userData).sendSimpleEmail("Antenas - Sua confirma��o de conta",
 								"Por favor, para confirmar sua conta, clique no link: ", "cadi");

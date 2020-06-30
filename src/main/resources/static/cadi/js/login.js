@@ -46,17 +46,17 @@ $('#form_login').submit(function(e){
     var userName = $('#email-login').val().trim();
     var password = $('#senha-login').val().trim();
     
-    $.post("/cadi", JSON.stringify({'email': userName, 'senha': password}), function(data){
-            
-        if(data.nivel){
+    $.post("/login", JSON.stringify({'email': userName, 'senha': password}), function(data){
+        const usuario = JSON.parse(data)
+        if(usuario.tipoUsuario == 'CADI'){
             window.location.href = 'principal.html';
-            sessionStorage.setItem("sess_email_cadi",data.email);
+            sessionStorage.setItem("sess_email_cadi",usuario.email);
         } else {
             alert("Usuário não localizado");
             window.location.href = 'index.html';
         }
             
-    }, "json");
+    });
     
 });
 

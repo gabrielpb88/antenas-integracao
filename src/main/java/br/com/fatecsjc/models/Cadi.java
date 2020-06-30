@@ -39,10 +39,6 @@ public class Cadi {
 		cadiCollection.insertOne(cadi);
 	}
 
-	public Document login(String email, String senha) {
-		return cadiCollection.find(new Document("email", email).append("senha", senha)).first();
-	}
-
 	public Document ativarCadi(String email) {
 		Document cadi = searchByEmail(email);
 		cadi.replace("ativo", true);
