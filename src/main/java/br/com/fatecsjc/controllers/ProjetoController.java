@@ -2,9 +2,6 @@ package br.com.fatecsjc.controllers;
 
 import br.com.fatecsjc.services.ProjetoService;
 import br.com.fatecsjc.utils.TextUtils;
-import com.google.gson.Gson;
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoIterable;
 import org.bson.Document;
 
 import static spark.Spark.*;

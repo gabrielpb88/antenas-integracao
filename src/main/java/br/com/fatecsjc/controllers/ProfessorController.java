@@ -1,26 +1,22 @@
 package br.com.fatecsjc.controllers;
 
-import static spark.Spark.get;
-import static spark.Spark.post;
-
-import java.util.Base64;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
-
 import br.com.fatecsjc.models.Professor;
 import br.com.fatecsjc.services.ProfessorService;
+import br.com.fatecsjc.utils.EmailService;
+import br.com.fatecsjc.utils.Jwt;
 import br.com.fatecsjc.utils.TextUtils;
-import com.mongodb.client.FindIterable;
 import com.mongodb.client.result.UpdateResult;
 import org.bson.Document;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import br.com.fatecsjc.utils.Jwt;
-import br.com.fatecsjc.utils.EmailService;
 import spark.Request;
 import spark.Response;
 import spark.Route;
+
+import java.util.Base64;
+
+import static spark.Spark.get;
+import static spark.Spark.post;
 
 public class ProfessorController {
 

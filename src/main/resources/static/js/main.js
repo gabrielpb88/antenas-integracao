@@ -133,7 +133,7 @@
         ];
 
         elements.forEach(item => {
-
+          console.log(item)
           let contentElement = item.element.find('[data-text-content]');
 
           if (item.key.indexOf('link-externo') != -1) {
@@ -175,7 +175,8 @@
               contentElement.text(`${reuniao.data} - ${reuniao.horario} - ${reuniao.local}`);
             }
           }
-          else if (item.key === 'entregas' || item.key ==='responsavel-professor') {
+
+          else if (item.key ==='responsavel-professor') {
             
             if (!project[item.key].length) {
               item.element.addClass('d-none');
@@ -184,6 +185,17 @@
             else {
               project[item.key].forEach(x => {
                 contentElement.append($.parseHTML(`<li>${x}</li>`));
+              });
+            }
+          } else if( item.key === 'entregas' ){
+            if (!project[item.key].length) {
+              item.element.addClass('d-none');
+              return;
+            }
+            else {
+              project[item.key].forEach(x => {
+                contentElement.append($.parseHTML(`<li>${x['aluno-responsavel']
+                }</li>`));
               });
             }
           }

@@ -13,9 +13,24 @@ $(document).ready(async function () {
   }, "json");
 
   $('[data-save-compentency]').click(e => {
-    const compentencia = $("#competencia").val()
-    criarMedalha(compentencia)
-    location.reload()
+    const inputCompetencia = $("#competencia")
+    const competencia = inputCompetencia.val().trim()
+    console.log(competencia)
+    if(competencia.length > 0){
+      $.ajax({ type: 'post', url: '/medalhas', data: JSON.stringify({ 'nome': competencia }) })
+          .done(() => {
+            location.reload()
+          })
+          .fail(error => {
+            if(error.status === 409){
+              alert("Esta medalha já existe!")
+            }
+          })
+    } else {
+      inputCompetencia.addClass("alert alert-danger")
+      alert("O campo não pode estar vazio!")
+    }
+
   })
 
   // const aluno = await $.ajax({ type: 'get', url: '/alunos/' + email })
@@ -147,10 +162,6 @@ function userData(user) {
   navPROF.append(updateSenha);
   navPROF.append(logout);
   $("li").addClass("list-inline-item");
-}
-
-function criarMedalha(competencia) {
-  $.ajax({ type: 'post', url: '/medalhas', data: JSON.stringify({ 'nome': competencia }) })
 }
 
 function listarMedalhas() {

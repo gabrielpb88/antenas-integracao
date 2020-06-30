@@ -32,6 +32,10 @@ public class MedalhaDao {
         return collection.find(Filters.eq("_id", id)).first();
     }
 
+    public boolean exists(String competencia){
+        return collection.find(Filters.eq("competencia", competencia)).first() != null;
+    }
+
     public void save(Medalha medalha){
         collection.insertOne(medalha);
     }

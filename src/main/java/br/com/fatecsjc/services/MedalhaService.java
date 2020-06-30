@@ -16,8 +16,6 @@ public class MedalhaService {
         medalhaRepository.save(medalha);
     }
 
-    public void delete(Medalha medalha){ medalhaRepository.delete(medalha); }
-
     public Medalha update(Medalha medalha) {
         medalhaRepository.update(medalha);
         return medalhaRepository.findById(medalha.getId());

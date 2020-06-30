@@ -1,5 +1,6 @@
 package br.com.fatecsjc.controllers;
 
+import br.com.fatecsjc.models.dao.MedalhaDao;
 import br.com.fatecsjc.models.entities.Medalha;
 import br.com.fatecsjc.services.MedalhaService;
 import com.google.gson.Gson;
@@ -16,6 +17,7 @@ import static spark.Spark.post;
 public class MedalhaController {
 
     private MedalhaService medalhaService;
+    private MedalhaDao medalhaDao = new MedalhaDao();
     private Gson gson = new Gson();
 
     public MedalhaController(){
@@ -38,6 +40,11 @@ public class MedalhaController {
         post("/medalhas", (request, response) -> {
             JSONObject body = new JSONObject(request.body());
             String nome = body.get("nome").toString();
+
+            if(medalhaDao.exists(nome)){
+                response.status(409);
+                return "Medalha já existente";
+            }
 
             // Daqui pra baixo é coisa do Mongo
             Medalha bronze = new Medalha();

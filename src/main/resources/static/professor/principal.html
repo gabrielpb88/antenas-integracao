@@ -23,8 +23,6 @@
       <ul data-user class="list-inline">
         <li><button class="btn btn-primary" data-toggle="modal" data-target="#modal-criar-medalha">Criar
             Medalha</button></li>
-        <li><button class="btn btn-primary" data-toggle="modal" data-target="#modal-listar-medalha">Listar
-            Medalhas</button></li>
       </ul>
     </div>
   </div>
@@ -68,6 +66,7 @@
                   <td>Nome</td>
                   <td>Email</td>
                   <td>Atribuir Medalha</td>
+                  <td></td>
                 </tr>
               </thead>
               <tbody id="tbody-alunos">
@@ -85,33 +84,6 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Criar Medalha</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <form>
-            <div class="form-group">
-              <label for="competencia">Tecnologia ou Habilidade</label>
-              <input name="nome" class="form-control" id="competencia" type="text"
-                placeholder="Tecnologia ou Habilidade a ser criada" />
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-success" data-save-compentency>Salvar</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal fade" id="modal-listar-medalha" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-
-      <div class="modal-content">
-        <div class="modal-header">
           <h5 class="modal-title">Medalhas</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
             <span aria-hidden="true">&times;</span>
@@ -120,13 +92,19 @@
         <div class="modal-body">
           <form>
             <div class="form-group">
-              <select id="medalhas" class="form-control">
-              </select>
+              <label for="medalhas">Medalhas Existentes</label>
+              <select id="medalhas" class="form-control"></select>
+            </div>
+            <div class="form-group">
+              <label for="competencia">Criar Nova Medalha</label>
+              <input name="nome" class="form-control" id="competencia" type="text"
+                placeholder="Tecnologia ou Habilidade a ser criada" />
             </div>
           </form>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-success" data-save-compentency>Salvar</button>
         </div>
       </div>
     </div>
