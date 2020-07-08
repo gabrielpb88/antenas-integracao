@@ -36,13 +36,16 @@ $('[data-login-form]').on('submit', function(event){
         senha: senha
     };
 
+    $.ajax('/login', {"email": "cadi@gmail.com"}).done((obj) => console.log(obj))
+
     $.post("/login", JSON.stringify(dados) , 'json')
         .done(function(token){
             localStorage.setItem('token', token);
             sessionStorage.setItem("sess_email_aluno", dados.email);
             location.replace('/aluno/principal.html');
         })
-        .fail(function() {
+        .fail(function(error) {
+            console.log(error);
             logando = false;
             alert('Login ou senha invalidos');
             btnEntrar.innerText = 'Entrar';

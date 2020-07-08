@@ -226,7 +226,10 @@
       type: 'POST',
       url: '/projetos',
       data: JSON.stringify(project)
-    }).done(() => location.reload());
+    }).done(() => {
+      location.replace('/empresa.html')
+      location.reload()
+    });
   })
 
   $('[data-empresario-logout]').click(function(e){
